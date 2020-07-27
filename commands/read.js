@@ -38,7 +38,8 @@ module.exports.execute = async (client, message) => {
             ).then(() => {
               pomMembers.update(
                 { points:  points,
-                  exp: exp},
+                  exp: exp,
+                  read: result[0].read + 1 },
                 { where: { user: message.author.id } }
               ).then(() => {
                 return message.channel.send('You now have one point to use! You also got a bonus of 50 points for your team.');

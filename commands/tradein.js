@@ -47,7 +47,8 @@ module.exports.execute = async (client, message, args) => {
           var newTeamExp = teamresult[0].exp + (requestedpoints * 100);
 
           pomMembers.update(
-            { exp: newExp },
+            { exp: newExp,
+              tradein: result[0].tradein + 1 },
             { where: { user: message.author.id } }
           ).then(() => {
             pomStats.update(

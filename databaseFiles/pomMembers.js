@@ -29,7 +29,12 @@ module.exports = sequelize.define('PMembers', {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  // The following are stats
   read: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  tradein: {
     type: Sequelize.STRING,
     allowNull: false,
   },
@@ -45,12 +50,9 @@ module.exports = sequelize.define('PMembers', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  defend: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   spy: {
     type: Sequelize.STRING,
     allowNull: false,
   }
+  // End stats
 });

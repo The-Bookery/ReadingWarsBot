@@ -38,7 +38,8 @@ module.exports.execute = async (client, message) => {
                 { where: { team: team } }
               ).then(() => {
                 pomMembers.update(
-                  { points: points},
+                  { points: points,
+                    build: result[0].build + 1 },
                   { where: { user: message.author.id } }
                 ).then(() => {
                   return message.channel.send(`You have restored your team's walls to 4 from ${teamresult[0].walls}! You lost 2 points in the process and now have ${result[0].points - 2}.`);
