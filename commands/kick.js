@@ -3,16 +3,16 @@ const pomMembers = require('../databaseFiles/pomMembers');
 
 function removeMember(client, message, args) {
   try {
-    const guild = client.guilds.get(message.guild.id);
-    const member = guild.members.get(args[0]);
+    const guild = client.guilds.cache.get(message.guild.id);
+    const member = guild.members.cache.get(args[0]);
 
-    const role1 = member.roles.find(role => role.id === config.roles.teamone);
-    const role2 = member.roles.find(role => role.id === config.roles.teamtwo);
-    const role3 = member.roles.find(role => role.id === config.roles.teamthree);
+    const role1 = member.roles.cache.find(role => role.id === config.roles.teamone);
+    const role2 = member.roles.cache.find(role => role.id === config.roles.teamtwo);
+    const role3 = member.roles.cache.find(role => role.id === config.roles.teamthree);
 
-    if (role1) member.removeRole(role1);
-    else if (role2) member.removeRole(role2);
-    else if (role3) member.removeRole(role3);
+    if (role1) member.roles.remove(role1);
+    else if (role2) member.roles.remove(role2);
+    else if (role3) member.roles.remove(role3);
 
     return `User has been removed from challenge.`;
   } catch (err) {

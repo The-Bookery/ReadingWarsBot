@@ -3,26 +3,18 @@ const connect = require('./connect.js');
 
 const sequelize = connect.sequelize;
 
-module.exports = sequelize.define('PStats', {
-  team: {
+module.exports = sequelize.define('PLeaves', {
+  user: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
   },
-  exp: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-  members: {
+  time: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  walls: {
-    type: Sequelize.INTEGER,
+  oldteam: {
+    type: Sequelize.STRING,
     allowNull: false,
-  },
-  defending: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
+  }
 });

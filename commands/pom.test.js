@@ -4,7 +4,7 @@ const pomBans = require('../databaseFiles/pomBans');
 
 function removeMember(client, message, args) {
   try {
-    const guild = client.guilds.get(message.guild.id);
+    const guild = guild.guilds.cache.get(message.guild.id);
     const member = guild.members.get(args[0]);
 
     const role1 = member.roles.find(role => role.id === config.roles.teamone);
@@ -188,13 +188,13 @@ module.exports.execute = async (client, message, args) => {
                         try {
                           var teamrole;
                           if (teamchoice == 1) {
-                            teamrole = message.guild.roles.find(role => role.id === config.roles.teamone);
+                            teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamone);
                           }
                           else if (teamchoice == 2) {
-                            teamrole = message.guild.roles.find(role => role.id === config.roles.teamtwo);
+                            teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamtwo);
                           }
                           else {
-                            teamrole = message.guild.roles.find(role => role.id === config.roles.teamthree);
+                            teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamthree);
                           }
                           message.member.addRole(teamrole);
                           message.channel

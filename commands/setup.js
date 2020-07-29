@@ -1,30 +1,54 @@
-const pomStats = require('../databaseFiles/pomStats');
+const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message) => {
   if (message.member.hasPermission('ADMINISTRATOR')) {
-    pomStats.sync().then(() => {
-      pomStats.findAll().then((result) => {
+    pomTeams.sync().then(() => {
+      pomTeams.findAll().then((result) => {
         if (result == 0) {
-          pomStats.create({
+          pomTeams.create({
             team: "one",
             exp: 0,
             members: 0,
             walls: 0,
-            defending: 0
+            stonemasons: 0,
+            thieves: 0,
+            knights: 0,
+            jokers: 0,
+            read: 0,
+            tradein: 0,
+            attack: 0,
+            build: 0,
+            bomb: 0,
           }).then(() => {
-            pomStats.create({
+            pomTeams.create({
               team: "two",
               exp: 0,
               members: 0,
               walls: 0,
-              defending: 0
+              stonemasons: 0,
+              thieves: 0,
+              knights: 0,
+              jokers: 0,
+              read: 0,
+              tradein: 0,
+              attack: 0,
+              build: 0,
+              bomb: 0,
             }).then(() => {
-              pomStats.create({
+              pomTeams.create({
                 team: "three",
                 exp: 0,
                 members: 0,
                 walls: 0,
-                defending: 0
+                stonemasons: 0,
+                thieves: 0,
+                knights: 0,
+                jokers: 0,
+                read: 0,
+                tradein: 0,
+                attack: 0,
+                build: 0,
+                bomb: 0,
               }).then(() => {
                 return message.channel.send('Team database has been set up.');
               });

@@ -1,16 +1,20 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
-const pomStats = require('../databaseFiles/pomStats');
+const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message, args) => {
   var team;
+  var wordteam;
 
   if (message.channel.id === config.channels.teamOne) {
     team = 1;
+    wordteam = "one";
   } else if (message.channel.id === config.channels.teamTwo) {
     team = 2;
+    wordteam = "two";
   } else if (message.channel.id === config.channels.teamThree) {
     team = 3;
+    wordteam = "three";
   } else {
     return await message.channel.send('Not the correct channel!');
   }
@@ -32,43 +36,68 @@ module.exports.execute = async (client, message, args) => {
       },
     }).then((result) => {
       if (result.length == 1) {
+        var penalty = 1;
+        if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
+
         var points = parseInt(result[0].points);
 
         if (points > 0) {
-          points -= 1;
+          points -= penalty;
 
-          pomStats.sync().then(() => {
-            var wordteam;
+          pomTeams.sync().then(() => {
+            var wordtarget;
 
             if (target == 1) {
-              wordteam = "one";
+              wordtarget = "one";
             } else if (target == 2) {
-              wordteam = "two";
+              wordtarget = "two";
             } else {
-              wordteam = "three";
+              wordtarget = "three";
             }
 
-            pomStats.findAll({
+            pomTeams.findAll({
               where: {
                 team: wordteam,
               },
-            }).then((targetresult) => {
-              var newWalls = targetresult[0].walls - 3;
-              if (newWalls < 0) newWalls = 0;
-              pomStats.update(
-                { walls: newWalls },
-                { where: { team: wordteam } }
-              ).then(() => {
-                pomMembers.update(
-                  { points: points,
-                    bomb: result[0].bomb + 1 },
-                  { where: { user: message.author.id } }
-                ).then(() => {
-                  return message.channel.send(`You have destroyed team ${target}'s walls. Their walls are now at ${newWalls}! You lost 1 point in the process and now have ${result[0].points - 1}.`);
-                }).catch((error) => {
-                  console.log('Update error: ' + error);
+            }).then((teamresult) => {
+              if (teamresult[0].walls > 0) {
+                pomTeams.findAll({
+                  where: {
+                    team: wordtarget,
+                  },
+                }).then((targetresult) => {
+                  var addition = "";
+                  var newWalls = targetresult[0].walls - 3;
+                  if (result[0].class == "joker" && Math.floor(Math.random() * 10) > 9 && targetresult[0].walls == 4) {newWalls = targetresult[0].walls - 4; addition = " with a +1 damage bonus from your joker class.";}
+
+                  var verb;
+                  if (newWalls > 0) verb = "damaged";
+                  else if (newWalls == 0) verb = `destroyed`;
+
+                  if (newWalls < 0) newWalls = 0;
+                  pomTeams.update(
+                    { walls: newWalls },
+                    { where: { team: wordtarget } }
+                  ).then(() => {
+                    pomMembers.update(
+                      { points: points,
+                        bomb: result[0].bomb + 1 },
+                      { where: { user: message.author.id } }
+                    ).then(() => {
+                      pomTeams.update(
+                        { bomb: teamresult[0].bomb + 1 },
+                        { where: { team: wordteam }},
+                      ).then(() => {
+                        return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} point in the process and now have ${result[0].points - 1}.`);
+                      });
+                    }).catch((error) => {
+                      console.log('Update error: ' + error);
+                    });
+                  });
                 });
-              });
+              } else {
+                return message.channel.send('The walls are down! You have been saved your point.');
+              }
             });
           });
         } else {

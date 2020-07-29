@@ -1,18 +1,15 @@
 const Discord = require('discord.js');
-const config = require('../config.json');
 
-var prefix = config.prefix;
-
-module.exports.execute = async (client, message, args) => {
+module.exports.execute = async (client, message, args, prefix) => {
   let commands = client.commands;
   let commandNames = [];
 
   if (!args || args.length === 0) {
-    let helpMessage = new Discord.RichEmbed()
+    let helpMessage = new Discord.MessageEmbed()
       .setColor('#750384')
       .setTitle('List of available commands')
       .setDescription(
-        `Commands available in ${message.guild.name}. Use \`.help [command]\` for more about a specific command.`
+        `Commands available in ${message.guild.name}. Use \`${prefix}help [command]\` for more about a specific command.`
       );
       
       commands.forEach((requestedcommand) => {
@@ -36,7 +33,7 @@ module.exports.execute = async (client, message, args) => {
     );
 
     if (command) {
-      let helpMessage = new Discord.RichEmbed()
+      let helpMessage = new Discord.MessageEmbed()
         .setColor('#750384')
         .setTitle(`${prefix}${command.config.name}`)
         .setDescription(

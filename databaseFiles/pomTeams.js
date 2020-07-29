@@ -3,33 +3,41 @@ const connect = require('./connect.js');
 
 const sequelize = connect.sequelize;
 
-module.exports = sequelize.define('PMembers', {
-  user: {
+module.exports = sequelize.define('PStats', {
+  team: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
   },
-  team: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  points: {
-    type: Sequelize.INTEGER,
-    allowNull: true,
-  },
   exp: {
     type: Sequelize.INTEGER,
-    allowNull: true,
+    allowNull: false,
   },
-  class: {
+  members: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  classchange: {
-    type: Sequelize.STRING,
+  walls: {
+    type: Sequelize.INTEGER,
     allowNull: false,
   },
   // The following are stats
+  stonemasons: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  thieves: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  knights: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  jokers: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
   read: {
     type: Sequelize.INTEGER,
     allowNull: false,

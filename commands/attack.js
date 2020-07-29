@@ -1,6 +1,11 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
-const pomStats = require('../databaseFiles/pomStats');
+const pomTeams = require('../databaseFiles/pomTeams');
+const Sequelize = require('sequelize');
+
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 module.exports.execute = async (client, message, args) => {
   var team;
@@ -37,7 +42,7 @@ module.exports.execute = async (client, message, args) => {
         if (points > 0) {
           points -= 1;
 
-          pomStats.sync().then(() => {
+          pomTeams.sync().then(() => {
             var wordteam;
 
             if (team == 1) {
@@ -58,65 +63,110 @@ module.exports.execute = async (client, message, args) => {
               wordtarget = "three";
             }
 
-            if (Math.floor(Math.random() * 100) > 49) {
-              pomStats.findAll({
+            var random = 49;
+            var penalty = 1;
+
+            if (result[0].class == "knight") random = 59;
+            else if (result[0].class == "joker") random = 54;
+            else if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
+
+            var stolen = randomInteger(500, 750);
+            var generatedRandom = Math.floor(Math.random() * 100);
+            console.log(generatedRandom);
+
+
+            if (generatedRandom > random) {
+              pomTeams.findAll({
                 where: {
                   team: wordtarget,
                 },
               }).then((targetresult) => {
                 if (targetresult[0].walls == 0) {
-                  pomStats.findAll({
-                    where: {
-                      team: wordteam
-                    }
-                  }).then((teamresult) => {
-                    var newExp = targetresult[0].exp - 200;
-                    if (newExp < 0) newExp = 0;
-                    var givenExp = targetresult[0].exp - newExp;
+                  pomMembers.findAll({
+                    attributes: [
+                        "id", "user", "exp", "team",
+                        [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+                      ],
+                      raw: true,
+                  }).then((rankedresult) => {
+                    var i = 0;
+                    var toremove = stolen;
+                    if (toremove > targetresult[0].exp) toremove = targetresult[0].exp;
 
-                    pomStats.update(
-                      { exp: newExp },
-                      { where: { team: wordtarget } }
-                    ).then(() => {
-                      pomStats.update(
-                        { exp: teamresult[0].exp + givenExp },
-                        { where: { team: wordteam }},
-                      ).then(() => {
-                        pomMembers.update(
-                          { points: points},
-                          { where: { user: message.author.id } }
+                    while (toremove > 0) {
+                      console.log(rankedresult);
+                      if (rankedresult[i]) {
+                        if (rankedresult[i].team == target) {
+                          if (rankedresult[i].exp >= stolen) {
+                            pomMembers.update(
+                              { exp: rankedresult[i].exp - stolen },
+                              { where: { user: rankedresult[i].user } }
+                            );
+                            toremove = 0;
+                          } else {
+                            toremove -= rankedresult[i].exp;
+                            pomMembers.update(
+                              { exp: 0 },
+                              { where: { user: rankedresult[i].user } }
+                            );
+                          }
+                        }
+                        i += 1;
+                      } else {
+                        break;
+                      }
+                    }
+                    if (targetresult[0].exp > 0) {
+                      pomTeams.findAll({
+                        where: {
+                          team: wordteam
+                        }
+                      }).then((teamresult) => {
+                        var newExp = targetresult[0].exp - stolen;
+                        if (newExp < 0) newExp = 0;
+                        var givenExp = targetresult[0].exp - newExp;
+
+                        pomTeams.update(
+                          { exp: newExp },
+                          { where: { team: wordtarget } }
                         ).then(() => {
-                          pomStats.update(
-                            { points: result[0].points - 1 },
-                            { where: { user: message.author.id }}
+                          pomTeams.update(
+                            { exp: teamresult[0].exp + givenExp,
+                              attack: teamresult[0].attack + 1 },
+                            { where: { team: wordteam }},
                           ).then(() => {
                             pomMembers.update(
-                              { attack: result[0].attack + 1 },
-                              { where: { user: message.author.id }}
-                            ).then(() => {return message.channel.send(`You attacked! Stealing ${givenExp} exp from team ${wordtarget}. Their exp is now at ${newExp}, and yours is at ${teamresult[0].exp + givenExp}. You now have ${result[0].points} points.`);}).catch((err) => {
-                              console.error("Error! ", err);
+                              { points: result[0].points - penalty,
+                                exp: result[0].exp + stolen,
+                                attack: result[0].attack + 1,
+                              },
+                              { where: { user: message.author.id } }
+                            ).then(() => {
+                              var stole = "points.";
+                              if (penalty == 0) stole = ", losing no points because of your thief class!";
+                              return message.channel.send(`You attacked! Stealing ${givenExp} exp from team ${wordtarget}. Their exp is now at ${newExp}, and yours is at ${teamresult[0].exp + givenExp}. You now have ${result[0].points - penalty} ${stole}`);}).catch((err) => {
+                                console.error("Error! ", err);
+                              });
+                            }).catch((error) => {
+                              console.log('Update error: ' + error);
                             });
                           }).catch((err) => {
                             console.error("Error! ", err);
                           });
-                        }).catch((error) => {
-                          console.log('Update error: ' + error);
+                        }).catch((err) => {
+                          console.error("Error! ", err);
                         });
-                      }).catch((err) => {
-                        console.error("Error! ", err);
-                      });
-                    }).catch((err) => {
-                      console.error("Error! ", err);
-                    });
-                  }).catch((err) => {
-                    console.error("Error! ", err);
+
+                    } else {
+                      return message.channel.send('Looks like this team has no exp for you to take! You have kept your point.');
+                    }
                   });
                 } else {
-                  pomStats.update(
+                  pomTeams.update(
                     { walls: targetresult[0].walls - 1 },
                     { where: { team: wordtarget } }
                   ).then(() => {
-                    pomStats.update(
+                    pomTeams.update(
                       { points: result[0].points - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
@@ -128,17 +178,17 @@ module.exports.execute = async (client, message, args) => {
                     console.error("Error! ", err);
                   });
                 }
-              }).catch((err) => {
-                console.error("Error! ", err);
               });
             } else {
-              pomStats.update(
+              pomMembers.update(
                 { points: result[0].points - 1 },
                 { where: { user: message.author.id }}
               ).then(() => {
                 return message.channel.send(`Your attack failed. You lost one point in the attempt, and are now at ${result[0].points - 1} points.`);
               });
             }
+          }).catch((err) => {
+            console.error("Error! ", err);
           });
         } else {
           return message.channel.send(`You don't have enough points for this! You only have ${result[0].points} points.`);
@@ -149,8 +199,6 @@ module.exports.execute = async (client, message, args) => {
     }).catch((err) => {
       console.error("Error! ", err);
     });
-  }).catch((err) => {
-    console.error("Error! ", err);
   });
 };
 

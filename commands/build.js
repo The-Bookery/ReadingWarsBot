@@ -1,6 +1,6 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
-const pomStats = require('../databaseFiles/pomStats');
+const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message) => {
   var team;
@@ -23,18 +23,33 @@ module.exports.execute = async (client, message) => {
     }).then((result) => {
       if (result.length == 1) {
         var points = parseInt(result[0].points);
+        var walls = 4;
+        var penalty = 2;
 
-        if (points > 1) {
-          points -= 2;
+        if (result[0].class == "stonemason") {
+          penalty = 1;
+          walls = 7;
+        }
 
-          pomStats.sync().then(() => {
-            pomStats.findAll({
+        if (points >= penalty) {
+          // To prevent spam abuse, these two are after the check
+          if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) {
+            penalty = 0;
+          } else if (result[0].class == "joker" && Math.floor(Math.random() * 9) > 4) {
+            penalty = 0;
+          }
+
+          points -= penalty;
+
+          pomTeams.sync().then(() => {
+            pomTeams.findAll({
               where: {
                 team: team,
               },
             }).then((teamresult) => {
-              pomStats.update(
-                { walls: 4 },
+              pomTeams.update(
+                { walls: walls,
+                  build: teamresult[0].build + 1 },
                 { where: { team: team } }
               ).then(() => {
                 pomMembers.update(
@@ -42,7 +57,12 @@ module.exports.execute = async (client, message) => {
                     build: result[0].build + 1 },
                   { where: { user: message.author.id } }
                 ).then(() => {
-                  return message.channel.send(`You have restored your team's walls to 4 from ${teamresult[0].walls}! You lost 2 points in the process and now have ${result[0].points - 2}.`);
+                  if (walls == 6) walls = "6 (a bonus for being a stonemason)";
+
+                  var special = "";
+                  if (penalty == 0) special = " because of your skills as a thief";
+
+                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} points in the process${special}, and now have ${points}.`);
                 }).catch((error) => {
                   console.log('Update error: ' + error);
                 });
