@@ -7,7 +7,7 @@ module.exports.execute = async (client, message) => {
         if (result == 0) {
           pomTeams.create({
             team: "one",
-            exp: 0,
+            points: 0,
             members: 0,
             walls: 0,
             stonemasons: 0,
@@ -22,7 +22,7 @@ module.exports.execute = async (client, message) => {
           }).then(() => {
             pomTeams.create({
               team: "two",
-              exp: 0,
+              points: 0,
               members: 0,
               walls: 0,
               stonemasons: 0,
@@ -37,7 +37,7 @@ module.exports.execute = async (client, message) => {
             }).then(() => {
               pomTeams.create({
                 team: "three",
-                exp: 0,
+                points: 0,
                 members: 0,
                 walls: 0,
                 stonemasons: 0,
@@ -67,6 +67,6 @@ module.exports.execute = async (client, message) => {
 module.exports.config = {
   name: 'setup',
   aliases: [],
-  description: 'Set up the important database before use. This is vital before you begin, otherwise it won\'t log any points for teams.',
+  description: 'Set up the important database before use. This is vital before you begin, otherwise it won\'t log any coins for teams.',
   usage: ['setup'],
 };

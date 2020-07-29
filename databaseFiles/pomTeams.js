@@ -9,7 +9,7 @@ module.exports = sequelize.define('PStats', {
     allowNull: false,
     unique: true,
   },
-  exp: {
+  points: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },

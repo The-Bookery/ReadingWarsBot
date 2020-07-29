@@ -3,15 +3,15 @@ const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message, args) => {
-  var requestedpoints;
+  var requestedcoins;
   if (args[0] && parseInt(args[0])) {
-    requestedpoints = Math.floor(parseInt(args[0]));
-    console.log(requestedpoints);
-    if (requestedpoints < 1) {
+    requestedcoins = Math.floor(parseInt(args[0]));
+    console.log(requestedcoins);
+    if (requestedcoins < 1) {
       return await message.channel.send('You must have a number greater than 0!');
     }
   } else if (!args[0]) {
-    requestedpoints = 1;
+    requestedcoins = 1;
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
@@ -44,37 +44,37 @@ module.exports.execute = async (client, message, args) => {
           var bonus = 0;
 
           if (result[0].class == "thief") {
-            for(var i = 0; i < requestedpoints; ++i){
+            for(var i = 0; i < requestedcoins; ++i){
               var random = Math.floor(Math.random() * 10);
               if (random == 9) bonus += 1;
             }
           }
 
-          var newPoints = result[0].points - requestedpoints + bonus;
-          if (newPoints < 0) {
-            return message.channel.send(`Looks like you don't have that many points! You currently have ${result[0].points}.`);
+          var newCoins = result[0].coins - requestedcoins + bonus;
+          if (newCoins < 0) {
+            return message.channel.send(`Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
           }
 
-          var newExp = result[0].exp + (requestedpoints * 100);
+          var newExp = result[0].points + (requestedcoins * 100);
           var joker = "";
-          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {newExp = newExp + requestedpoints * 50; joker = ", with a 50% bonus from your joker class";}
-          var newTeamExp = teamresult[0].exp + (requestedpoints * 100);
+          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {newExp = newExp + requestedcoins * 50; joker = ", with a 50% bonus from your joker class";}
+          var newTeamExp = teamresult[0].points + (requestedcoins * 100);
 
           pomMembers.update(
-            { exp: newExp,
-              points: newPoints,
+            { points: newExp,
+              coins: newCoins,
               tradein: result[0].tradein + 1 },
             { where: { user: message.author.id } }
           ).then(() => {
             pomTeams.update(
-              { exp: newTeamExp,
+              { points: newTeamExp,
                 tradein: teamresult[0].tradein + 1 },
               { where: { team: wordteam } }
             ).then(() => {
-              let plural = (requestedpoints === 1) ? "point" : "points";
+              let plural = (requestedcoins === 1) ? "coin" : "coins";
               let thief = "";
-              if (bonus > 0) thief = `, stealing ${bonus} points back,`;
-              return message.channel.send(`You have traded in ${requestedpoints - bonus} ${plural}${thief} for ${newExp - result[0].exp} exp${joker}. You now have a total of ${newExp} and your team has a total of ${newTeamExp}.`);
+              if (bonus > 0) thief = `, stealing ${bonus} coins back,`;
+              return message.channel.send(`You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newExp - result[0].points} points${joker}. You now have a total of ${newExp} and your team has a total of ${newTeamExp}.`);
             });
           });
         });
@@ -86,6 +86,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'tradein',
   aliases: [],
-  description: 'Trade in an amount of points at a rate of 100 exp per point!',
-  usage: ['tradein [points (leave blank for 1)]'],
+  description: 'Trade in an amount of coins at a rate of 100 points per coin!',
+  usage: ['tradein [coins (leave blank for 1)]'],
 };

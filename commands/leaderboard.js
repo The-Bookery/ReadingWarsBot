@@ -21,8 +21,8 @@ module.exports.execute = async (client, message, args) => {
       pomMembers.sync().then(() => {
         pomMembers.findAll({
           attributes: [
-              "id", "user", "exp", "team",
-              [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+              "id", "user", "points", "team",
+              [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
             ],
             raw: true,
         }).then((result) => {
@@ -43,7 +43,7 @@ module.exports.execute = async (client, message, args) => {
 
                   helpMessage.addField(
                     `**${prettynumber}**`,
-                    `\`\`\`${member.user.username} - ${result[i].exp} (Team ${result[i].team})\`\`\``
+                    `\`\`\`${member.user.username} - ${result[i].points} (Team ${result[i].team})\`\`\``
                   );
 
                   if (i == 9) break;
@@ -62,8 +62,8 @@ module.exports.execute = async (client, message, args) => {
       pomTeams.sync().then(() => {
         pomTeams.findAll({
           attributes: [
-              "id", "team", "exp",
-              [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+              "id", "team", "points",
+              [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
             ],
             raw: true,
         }).then((result) => {
@@ -81,7 +81,7 @@ module.exports.execute = async (client, message, args) => {
 
                   helpMessage.addField(
                     `**${prettynumber}**`,
-                    `\`\`\`${result[i].team[0].toUpperCase() + result[i].team.slice(1)} - ${result[i].exp}\`\`\``
+                    `\`\`\`${result[i].team[0].toUpperCase() + result[i].team.slice(1)} - ${result[i].points}\`\`\``
                   );
 
                   if (i == 9) break;

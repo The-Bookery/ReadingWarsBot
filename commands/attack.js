@@ -37,10 +37,10 @@ module.exports.execute = async (client, message, args) => {
       },
     }).then((result) => {
       if (result.length == 1) {
-        var points = parseInt(result[0].points);
+        var coins = parseInt(result[0].coins);
 
-        if (points > 0) {
-          points -= 1;
+        if (coins > 0) {
+          coins -= 1;
 
           pomTeams.sync().then(() => {
             var wordteam;
@@ -84,29 +84,29 @@ module.exports.execute = async (client, message, args) => {
                 if (targetresult[0].walls == 0) {
                   pomMembers.findAll({
                     attributes: [
-                        "id", "user", "exp", "team",
-                        [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+                        "id", "user", "points", "team",
+                        [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
                       ],
                       raw: true,
                   }).then((rankedresult) => {
                     var i = 0;
                     var toremove = stolen;
-                    if (toremove > targetresult[0].exp) toremove = targetresult[0].exp;
+                    if (toremove > targetresult[0].points) toremove = targetresult[0].points;
 
                     while (toremove > 0) {
                       console.log(rankedresult);
                       if (rankedresult[i]) {
                         if (rankedresult[i].team == target) {
-                          if (rankedresult[i].exp >= stolen) {
+                          if (rankedresult[i].points >= stolen) {
                             pomMembers.update(
-                              { exp: rankedresult[i].exp - stolen },
+                              { points: rankedresult[i].points - stolen },
                               { where: { user: rankedresult[i].user } }
                             );
                             toremove = 0;
                           } else {
-                            toremove -= rankedresult[i].exp;
+                            toremove -= rankedresult[i].points;
                             pomMembers.update(
-                              { exp: 0 },
+                              { points: 0 },
                               { where: { user: rankedresult[i].user } }
                             );
                           }
@@ -116,35 +116,35 @@ module.exports.execute = async (client, message, args) => {
                         break;
                       }
                     }
-                    if (targetresult[0].exp > 0) {
+                    if (targetresult[0].points > 0) {
                       pomTeams.findAll({
                         where: {
                           team: wordteam
                         }
                       }).then((teamresult) => {
-                        var newExp = targetresult[0].exp - stolen;
+                        var newExp = targetresult[0].points - stolen;
                         if (newExp < 0) newExp = 0;
-                        var givenExp = targetresult[0].exp - newExp;
+                        var givenExp = targetresult[0].points - newExp;
 
                         pomTeams.update(
-                          { exp: newExp },
+                          { points: newExp },
                           { where: { team: wordtarget } }
                         ).then(() => {
                           pomTeams.update(
-                            { exp: teamresult[0].exp + givenExp,
+                            { points: teamresult[0].points + givenExp,
                               attack: teamresult[0].attack + 1 },
                             { where: { team: wordteam }},
                           ).then(() => {
                             pomMembers.update(
-                              { points: result[0].points - penalty,
-                                exp: result[0].exp + stolen,
+                              { coins: result[0].coins - penalty,
+                                points: result[0].points + stolen,
                                 attack: result[0].attack + 1,
                               },
                               { where: { user: message.author.id } }
                             ).then(() => {
-                              var stole = "points.";
-                              if (penalty == 0) stole = ", losing no points because of your thief class!";
-                              return message.channel.send(`You attacked! Stealing ${givenExp} exp from team ${wordtarget}. Their exp is now at ${newExp}, and yours is at ${teamresult[0].exp + givenExp}. You now have ${result[0].points - penalty} ${stole}`);}).catch((err) => {
+                              var stole = "coins.";
+                              if (penalty == 0) stole = ", losing no coins because of your thief class!";
+                              return message.channel.send(`You attacked! Stealing ${givenExp} points from team ${wordtarget}. Their points is now at ${newExp}, and yours is at ${teamresult[0].points + givenExp}. You now have ${result[0].coins - penalty} ${stole}`);}).catch((err) => {
                                 console.error("Error! ", err);
                               });
                             }).catch((error) => {
@@ -158,7 +158,7 @@ module.exports.execute = async (client, message, args) => {
                         });
 
                     } else {
-                      return message.channel.send('Looks like this team has no exp for you to take! You have kept your point.');
+                      return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
                     }
                   });
                 } else {
@@ -167,10 +167,10 @@ module.exports.execute = async (client, message, args) => {
                     { where: { team: wordtarget } }
                   ).then(() => {
                     pomTeams.update(
-                      { points: result[0].points - 1 },
+                      { coins: result[0].coins - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
-                      return message.channel.send(`You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one point in the attempt, and are now at ${result[0].points - 1} points.`);
+                      return message.channel.send(`You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
                     }).catch((err) => {
                       console.error("Error! ", err);
                     });
@@ -181,17 +181,17 @@ module.exports.execute = async (client, message, args) => {
               });
             } else {
               pomMembers.update(
-                { points: result[0].points - 1 },
+                { coins: result[0].coins - 1 },
                 { where: { user: message.author.id }}
               ).then(() => {
-                return message.channel.send(`Your attack failed. You lost one point in the attempt, and are now at ${result[0].points - 1} points.`);
+                return message.channel.send(`Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
               });
             }
           }).catch((err) => {
             console.error("Error! ", err);
           });
         } else {
-          return message.channel.send(`You don't have enough points for this! You only have ${result[0].points} points.`);
+          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');

@@ -39,10 +39,10 @@ module.exports.execute = async (client, message, args) => {
         var penalty = 1;
         if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
 
-        var points = parseInt(result[0].points);
+        var coins = parseInt(result[0].coins);
 
-        if (points > 0) {
-          points -= penalty;
+        if (coins > 0) {
+          coins -= penalty;
 
           pomTeams.sync().then(() => {
             var wordtarget;
@@ -68,9 +68,11 @@ module.exports.execute = async (client, message, args) => {
                 }).then((targetresult) => {
                   var addition = "";
                   var newWalls = targetresult[0].walls - 3;
+                  if (newWalls < 0) newWalls = 0;
                   if (result[0].class == "joker" && Math.floor(Math.random() * 10) > 9 && targetresult[0].walls == 4) {newWalls = targetresult[0].walls - 4; addition = " with a +1 damage bonus from your joker class.";}
 
                   var verb;
+                  console.log(newWalls);
                   if (newWalls > 0) verb = "damaged";
                   else if (newWalls == 0) verb = `destroyed`;
 
@@ -80,7 +82,7 @@ module.exports.execute = async (client, message, args) => {
                     { where: { team: wordtarget } }
                   ).then(() => {
                     pomMembers.update(
-                      { points: points,
+                      { coins: coins,
                         bomb: result[0].bomb + 1 },
                       { where: { user: message.author.id } }
                     ).then(() => {
@@ -88,7 +90,7 @@ module.exports.execute = async (client, message, args) => {
                         { bomb: teamresult[0].bomb + 1 },
                         { where: { team: wordteam }},
                       ).then(() => {
-                        return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} point in the process and now have ${result[0].points - 1}.`);
+                        return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} coin in the process and now have ${result[0].coins - 1}.`);
                       });
                     }).catch((error) => {
                       console.log('Update error: ' + error);
@@ -96,12 +98,12 @@ module.exports.execute = async (client, message, args) => {
                   });
                 });
               } else {
-                return message.channel.send('The walls are down! You have been saved your point.');
+                return message.channel.send('The walls are down! You have been saved your coin.');
               }
             });
           });
         } else {
-          return message.channel.send(`You don't have enough points for this! You only have ${result[0].points} points.`);
+          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');

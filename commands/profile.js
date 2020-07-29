@@ -53,7 +53,7 @@ module.exports.execute = async (client, message, args) => {
           `\`\`\`Finriq\`\`\``
         )
         .addField(
-          `Points`,
+          `Coins`,
           `\`\`\`∞\`\`\``
         )
         .addFields(
@@ -75,7 +75,7 @@ module.exports.execute = async (client, message, args) => {
         pomMembers.findAll({
           attributes: [
               "id", "user",
-              [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+              [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
             ],
             raw: true,
         }).then((rankresult) => {
@@ -104,13 +104,13 @@ module.exports.execute = async (client, message, args) => {
                   `See granular statistics about this user's habits.`
                 )
                 .addFields(
-                  { name: `Exp`, value: `\`\`\`${result[0].exp}\`\`\``, inline: true },
+                  { name: `Exp`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
                   { name: `Global Rank`, value: `\`\`\`${rank}\`\`\``, inline: true },
                 )
                 .addFields(
                   { name: `Team`, value: `\`\`\`${result[0].team[0].toUpperCase() + result[0].team.slice(1)}\`\`\`` },
                   { name: `Class`, value: `\`\`\`${result[0].class[0].toUpperCase() + result[0].class.slice(1)}\`\`\`` },
-                  { name: `Points`, value: `\`\`\`${result[0].points}\`\`\`` },
+                  { name: `Coins`, value: `\`\`\`${result[0].coins}\`\`\`` },
                 )
                 .addFields(
                   { name: 'Read', value: `\`\`\`${result[0].read}\`\`\``, inline: true },
@@ -148,7 +148,7 @@ module.exports.execute = async (client, message, args) => {
       pomTeams.findAll({
         attributes: [
             "id", "team",
-            [Sequelize.literal('RANK () OVER ( ORDER BY exp DESC )'), 'rank']
+            [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
           ],
           raw: true,
       }).then((rankresult) => {
@@ -175,7 +175,7 @@ module.exports.execute = async (client, message, args) => {
               `See statistics about this team's habits.`
             )
             .addFields(
-              { name: `Exp`, value: `\`\`\`${result[0].exp}\`\`\``, inline: true },
+              { name: `Exp`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
               { name: `Team Rank`, value: `\`\`\`${rank}\`\`\``, inline: true },
             )
             .addField (

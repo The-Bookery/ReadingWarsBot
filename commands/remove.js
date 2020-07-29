@@ -8,7 +8,7 @@ module.exports.execute = async (client, message, args) => {
       return await message.channel.send("Please add a valid user ID to remove from!");
     }
 
-    if (!args[1] == "points" && !args[1] == "exp") {
+    if (!args[1] == "coins" && !args[1] == "points") {
       return await message.channel.send("Please add a valid item to remove!");
     }
 
@@ -24,21 +24,21 @@ module.exports.execute = async (client, message, args) => {
       },
     }).then((result) => {
       if (result.length == 1) {
-        if (args[1] == "points") {
+        if (args[1] == "coins") {
           pomMembers.update(
-            { points:  result[0].points - args[2],},
+            { coins:  result[0].coins - args[2],},
             { where: { user: args[0] } }
           ).then(() => {
-            return message.channel.send(`${args[2]} points have been removed from specified user.`);
+            return message.channel.send(`${args[2]} coins have been removed from specified user.`);
           }).catch((error) => {
             console.log('Update error: ' + error);
           });
         } else {
           pomMembers.update(
-            { exp:  result[0].exp - args[2],},
+            { points:  result[0].points - args[2],},
             { where: { user: args[0] } }
           ).then(() => {
-            return message.channel.send(`${args[2]} exp has been removed from specified user.`);
+            return message.channel.send(`${args[2]} points has been removed from specified user.`);
           }).catch((error) => {
             console.log('Update error: ' + error);
           });
@@ -51,6 +51,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'remove',
   aliases: [],
-  description: 'Removes points or exp from a user.',
-  usage: ['remove <user ID> <points | exp> <amount>'],
+  description: 'Removes coins or points from a user.',
+  usage: ['remove <user ID> <coins | points> <amount>'],
 };

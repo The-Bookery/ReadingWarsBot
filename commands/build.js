@@ -22,7 +22,7 @@ module.exports.execute = async (client, message) => {
       },
     }).then((result) => {
       if (result.length == 1) {
-        var points = parseInt(result[0].points);
+        var coins = parseInt(result[0].coins);
         var walls = 4;
         var penalty = 2;
 
@@ -31,15 +31,18 @@ module.exports.execute = async (client, message) => {
           walls = 7;
         }
 
-        if (points >= penalty) {
+        if (coins >= penalty) {
           // To prevent spam abuse, these two are after the check
+          var special = "";
           if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) {
             penalty = 0;
+            special = " because of your skills as a thief";
           } else if (result[0].class == "joker" && Math.floor(Math.random() * 9) > 4) {
             penalty = 0;
+            special = " because of your skills as a joker";
           }
 
-          points -= penalty;
+          coins -= penalty;
 
           pomTeams.sync().then(() => {
             pomTeams.findAll({
@@ -53,16 +56,13 @@ module.exports.execute = async (client, message) => {
                 { where: { team: team } }
               ).then(() => {
                 pomMembers.update(
-                  { points: points,
+                  { coins: coins,
                     build: result[0].build + 1 },
                   { where: { user: message.author.id } }
                 ).then(() => {
                   if (walls == 6) walls = "6 (a bonus for being a stonemason)";
 
-                  var special = "";
-                  if (penalty == 0) special = " because of your skills as a thief";
-
-                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} points in the process${special}, and now have ${points}.`);
+                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} coins in the process${special}, and now have ${coins}.`);
                 }).catch((error) => {
                   console.log('Update error: ' + error);
                 });
@@ -70,7 +70,7 @@ module.exports.execute = async (client, message) => {
             });
           });
         } else {
-          return message.channel.send(`You don't have enough points for this! You only have ${result[0].points} points.`);
+          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');

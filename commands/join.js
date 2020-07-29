@@ -127,8 +127,8 @@ module.exports.execute = async (client, message, args) => {
                         pomMembers.create({
                           user: message.author.id,
                           team: teamchoice,
+                          coins: 0,
                           points: 0,
-                          exp: 0,
                           class: gclass,
                           classchange: Date.now(),
                           read: 0,

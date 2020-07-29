@@ -29,26 +29,90 @@ module.exports.execute = async (client, message, args) => {
   }
 
   if (message.member.hasPermission('ADMINISTRATOR')) {
-    pomBans.sync().then(() => {
-      pomBans.create({
-        user: args[0]
-      })
-      .then(() => {
+    try {
+      pomBans.sync().then(() => {
         pomMembers.sync().then(() => {
-          pomMembers.destroy({
-            where: {
+          pomTeams.sync().then(() => {
+            pomBans.create({
               user: args[0]
-            }
-          }).then(() => {
-            return message.channel.send(removeMember(client, message, args));
+            })
+            .then(() => {
+              pomMembers.findAll({
+                where: {
+                  user: args[0],
+                }
+              }).then((result) => {
+                if (result.length > 0) {
+                  var wordteam;
+
+                  if (result[0].team == 1) {
+                    wordteam = "one";
+                  } else if (result[0].team == 2) {
+                    wordteam = "two";
+                  } else if (result[0].team == 3) {
+                    wordteam = "three";
+                  } else {
+                    return message.channel.send('Looks like you aren\'t in a team!');
+                  }
+
+                  pomTeams.findAll({
+                    where: {
+                      team: wordteam,
+                    },
+                  }).then((teamresult) => {
+                    pomTeams.update(
+                      {
+                        points: teamresult[0].points - result[0].points,
+                        read: teamresult[0].read - result[0].read,
+                        tradein: teamresult[0].tradein - result[0].tradein,
+                        attack: teamresult[0].attack - result[0].attack,
+                        build: teamresult[0].build - result[0].build,
+                        bomb: teamresult[0].bomb - result[0].bomb
+                      },
+                      { where: { team: wordteam, }}
+                    ).then(() => {
+                      var gclass = result[0].class;
+                      if (gclass == "knight") {
+                        pomTeams.update(
+                          { knights: teamresult[0].knights - 1 },
+                          { where: { team: wordteam } }
+                        );
+                      } else if (gclass == "thief") {
+                        pomTeams.update(
+                          { thieves: teamresult[0].thieves - 1 },
+                          { where: { team: wordteam } }
+                        );
+                      } else if (gclass == "stonemason") {
+                        pomTeams.update(
+                          { stonemasons: teamresult[0].stonemasons - 1 },
+                          { where: { team: wordteam } }
+                        );
+                      } else if (gclass == "joker") {
+                        pomTeams.update(
+                          { jokers: teamresult[0].jokers - 1 },
+                          { where: { team: wordteam } }
+                        );
+                      }
+                    });
+                  });
+                }
+
+                pomMembers.destroy({
+                  where: {
+                    user: args[0]
+                  }
+                }).then(() => {
+                  return message.channel.send(removeMember(client, message, args));
+                });
+              });
           });
-        })
-      .catch((err) => {
-        console.error('Ban error: ', err);
+        });
       });
     });
-  });
- } else {
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
     return message.channel.send('You do not have permission to ban a user from the challenge!');
   }
 };

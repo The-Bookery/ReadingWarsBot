@@ -3,15 +3,15 @@ const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message, args) => {
-  var requestedpoints;
+  var requestedcoins;
   if (args[0] && parseInt(args[0])) {
-    requestedpoints = Math.floor(parseInt(args[0]));
-    console.log(requestedpoints);
-    if (requestedpoints < 1) {
+    requestedcoins = Math.floor(parseInt(args[0]));
+    console.log(requestedcoins);
+    if (requestedcoins < 1) {
       return await message.channel.send('You must have a number greater than 0!');
     }
   } else if (!args[0]) {
-    requestedpoints = 1;
+    requestedcoins = 1;
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
@@ -34,8 +34,8 @@ module.exports.execute = async (client, message, args) => {
         user: message.author.id,
       },
     }).then((result) => {
-      var points = parseInt(result[0].points) + requestedpoints;
-      var exp = parseInt(result[0].exp) + (requestedpoints * 50);
+      var coins = parseInt(result[0].coins) + requestedcoins;
+      var points = parseInt(result[0].points) + (requestedcoins * 50);
 
       if (result.length == 1) {
         pomTeams.sync().then(() => {
@@ -44,19 +44,19 @@ module.exports.execute = async (client, message, args) => {
               team: team,
             },
           }).then((teamresult) => {
-            var teampoints = teamresult[0].exp + (requestedpoints * 50);
+            var teamcoins = teamresult[0].points + (requestedcoins * 50);
             pomTeams.update(
-              { exp: teampoints,
-                read: teamresult[0].read + requestedpoints },
+              { points: teamcoins,
+                read: teamresult[0].read + requestedcoins },
               { where: { team: team } }
             ).then(() => {
               pomMembers.update(
-                { points:  points,
-                  exp: exp,
-                  read: result[0].read + requestedpoints },
+                { coins:  coins,
+                  points: points,
+                  read: result[0].read + requestedcoins },
                 { where: { user: message.author.id } }
               ).then(() => {
-                return message.channel.send(`You now have ${result[0].points + requestedpoints} points to use! You also got a bonus of ${requestedpoints * 50} points for your team.`);
+                return message.channel.send(`You now have ${result[0].coins + requestedcoins} coins to use! You also got a bonus of ${requestedcoins * 50} points for your team.`);
               }).catch((error) => {
                 console.log('Update error: ' + error);
               });
@@ -73,6 +73,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'read',
   aliases: ['r'],
-  description: 'Adds points to your score for later use, and adds a bonus of 50 exp per read for your team. Optional entry for how many reads you\'ve done.',
-  usage: ['read [points]'],
+  description: 'Adds coins to your score for later use, and adds a bonus of 50 points per read for your team. Optional entry for how many reads you\'ve done.',
+  usage: ['read ['],
 };

@@ -13,11 +13,11 @@ module.exports = sequelize.define('PMembers', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  points: {
+  coins: {
     type: Sequelize.INTEGER,
     allowNull: true,
   },
-  exp: {
+  points: {
     type: Sequelize.INTEGER,
     allowNull: true,
   },

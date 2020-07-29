@@ -112,11 +112,11 @@ module.exports.execute = async (client, message, args) => {
           }).then((result) => {
             if (result.length == 1) {
               pomMembers.update(
-                { points:  result.points + 1,
+                { coins:  result.coins + 1,
                   stats: result.stats + 5},
                 { where: { user: user.id } }
               ).then(() => {
-                return message.channel.send('You now have one point to use! You also got a bonus of 5 points for your team.');
+                return message.channel.send('You now have one coin to use! You also got a bonus of 5 coins for your team.');
               }).catch((error) => {
                 console.log('Update error: ' + error);
               });
@@ -181,7 +181,7 @@ module.exports.execute = async (client, message, args) => {
                       pomMembers.create({
                         user: message.author.id,
                         team: teamchoice,
-                        points: 0,
+                        coins: 0,
                         stats: 0
                       })
                       .then(() => {
