@@ -63,11 +63,11 @@ module.exports.execute = async (client, message, args) => {
               wordtarget = "three";
             }
 
-            var random = 49;
+            var random = 26;
             var penalty = 1;
 
-            if (result[0].class == "knight") random = 59;
-            else if (result[0].class == "joker") random = 54;
+            if (result[0].class == "knight") random = 16;
+            else if (result[0].class == "joker") random = 21;
             else if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
 
             var stolen = randomInteger(500, 750);

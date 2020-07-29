@@ -11,7 +11,7 @@ module.exports.execute = async (client, message, args, prefix) => {
       .setDescription(
         `Commands available in ${message.guild.name}. Use \`${prefix}help [command]\` for more about a specific command.`
       );
-      
+
       commands.forEach((requestedcommand) => {
           helpMessage.addField(
             `**${prefix}${requestedcommand.config.name}**`,

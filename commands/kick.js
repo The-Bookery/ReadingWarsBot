@@ -54,7 +54,7 @@ module.exports.execute = async (client, message, args) => {
           }).then((teamresult) => {
             pomTeams.update(
               {
-                coins: teamresult[0].points - result[0].points,
+                points: teamresult[0].points - result[0].points,
                 read: teamresult[0].read - result[0].read,
                 tradein: teamresult[0].tradein - result[0].tradein,
                 attack: teamresult[0].attack - result[0].attack,
