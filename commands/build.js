@@ -82,6 +82,6 @@ module.exports.execute = async (client, message) => {
 module.exports.config = {
   name: 'build',
   aliases: ['b'],
-  description: 'Restores your team\'s walls to 4 in exchange for 2 exp.',
+  description: 'Restores your team\'s walls to 4 in exchange for 2 points.',
   usage: ['read'],
 };

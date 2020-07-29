@@ -1,4 +1,5 @@
 const pomMembers = require('../databaseFiles/pomMembers');
+const pomTeams = require('../databaseFiles/pomTeams');
 
 module.exports.execute = async (client, message, args) => {
   if (!args[0]) {
@@ -6,9 +7,9 @@ module.exports.execute = async (client, message, args) => {
   } else {
     if (!args[0] == "user" && !args[0] == "team") {
       if (!parseInt(args[1])) {
-        if (args[0] == "user") return await message.channel.send("Please add a valid user ID to remove from!");
-        else if (args[0] == "team") {
-          return await message.channel.send("Please add a valid team number to remove from!");
+        if (args[0] == "user") return await message.channel.send("Please enter a valid user ID to remove from!");
+        else if (args[0] == "team" && args[0] == 1 || args[0] == 2 || args[0] == 3) {
+          return await message.channel.send("Please enter a valid team number to remove from!");
         }
       }
 
@@ -26,9 +27,9 @@ module.exports.execute = async (client, message, args) => {
 
   var wordteam;
 
-  if (args[0] == 1) {
+  if (args[1] == 1) {
     wordteam = "one";
-  } else if (args[0] == 2) {
+  } else if (args[1] == 2) {
     wordteam = "two";
   } else {
     wordteam = "three";
@@ -80,11 +81,12 @@ module.exports.execute = async (client, message, args) => {
               },
             }).then((result) => {
               if (result.length == 1) {
+                console.log(result[0].points);
                 pomTeams.update(
-                  { points:  result[0].points - args[3],},
+                  { points: result[0].points - args[3]},
                   { where: { team: wordteam } }
                 ).then(() => {
-                  return message.channel.send(`${args[3]} points has been removed from specified user.`);
+                  return message.channel.send(`${args[3]} points has been removed from specified team.`);
                 }).catch((error) => {
                   console.log('Update error: ' + error);
                 });

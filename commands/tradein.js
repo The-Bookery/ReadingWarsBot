@@ -55,26 +55,26 @@ module.exports.execute = async (client, message, args) => {
             return message.channel.send(`Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
           }
 
-          var newExp = result[0].points + (requestedcoins * 100);
+          var newPoints = result[0].points + (requestedcoins * 100);
           var joker = "";
-          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {newExp = newExp + requestedcoins * 50; joker = ", with a 50% bonus from your joker class";}
-          var newTeamExp = teamresult[0].points + (requestedcoins * 100);
+          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {newPoints = newPoints + requestedcoins * 50; joker = ", with a 50% bonus from your joker class";}
+          var newTeamPoints = teamresult[0].points + (requestedcoins * 100);
 
           pomMembers.update(
-            { points: newExp,
+            { points: newPoints,
               coins: newCoins,
               tradein: result[0].tradein + 1 },
             { where: { user: message.author.id } }
           ).then(() => {
             pomTeams.update(
-              { points: newTeamExp,
+              { points: newTeamPoints,
                 tradein: teamresult[0].tradein + 1 },
               { where: { team: wordteam } }
             ).then(() => {
               let plural = (requestedcoins === 1) ? "coin" : "coins";
               let thief = "";
               if (bonus > 0) thief = `, stealing ${bonus} coins back,`;
-              return message.channel.send(`You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newExp - result[0].points} points${joker}. You now have a total of ${newExp} and your team has a total of ${newTeamExp}.`);
+              return message.channel.send(`You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newPoints - result[0].points} points${joker}. You now have a total of ${newPoints} and your team has a total of ${newTeamPoints}.`);
             });
           });
         });

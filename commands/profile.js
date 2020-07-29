@@ -45,7 +45,7 @@ module.exports.execute = async (client, message, args) => {
           `See granular statistics about this user's habits.`
         )
         .addFields(
-          { name: `Exp`, value: `\`\`\`∞\`\`\``, inline: true },
+          { name: `Points`, value: `\`\`\`∞\`\`\``, inline: true },
           { name: `Global Rank`, value: `\`\`\`∞\`\`\``, inline: true },
         )
         .addField(
@@ -104,7 +104,7 @@ module.exports.execute = async (client, message, args) => {
                   `See granular statistics about this user's habits.`
                 )
                 .addFields(
-                  { name: `Exp`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
+                  { name: `Points`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
                   { name: `Global Rank`, value: `\`\`\`${rank}\`\`\``, inline: true },
                 )
                 .addFields(
@@ -175,7 +175,7 @@ module.exports.execute = async (client, message, args) => {
               `See statistics about this team's habits.`
             )
             .addFields(
-              { name: `Exp`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
+              { name: `Points`, value: `\`\`\`${result[0].points}\`\`\``, inline: true },
               { name: `Team Rank`, value: `\`\`\`${rank}\`\`\``, inline: true },
             )
             .addField (

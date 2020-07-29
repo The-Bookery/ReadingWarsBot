@@ -122,16 +122,16 @@ module.exports.execute = async (client, message, args) => {
                           team: wordteam
                         }
                       }).then((teamresult) => {
-                        var newExp = targetresult[0].points - stolen;
-                        if (newExp < 0) newExp = 0;
-                        var givenExp = targetresult[0].points - newExp;
+                        var newPoints = targetresult[0].points - stolen;
+                        if (newPoints < 0) newPoints = 0;
+                        var givenPoints = targetresult[0].points - newPoints;
 
                         pomTeams.update(
-                          { points: newExp },
+                          { points: newPoints },
                           { where: { team: wordtarget } }
                         ).then(() => {
                           pomTeams.update(
-                            { points: teamresult[0].points + givenExp,
+                            { points: teamresult[0].points + givenPoints,
                               attack: teamresult[0].attack + 1 },
                             { where: { team: wordteam }},
                           ).then(() => {
@@ -144,7 +144,7 @@ module.exports.execute = async (client, message, args) => {
                             ).then(() => {
                               var stole = "coins.";
                               if (penalty == 0) stole = ", losing no coins because of your thief class!";
-                              return message.channel.send(`You attacked! Stealing ${givenExp} points from team ${wordtarget}. Their points is now at ${newExp}, and yours is at ${teamresult[0].points + givenExp}. You now have ${result[0].coins - penalty} ${stole}`);}).catch((err) => {
+                              return message.channel.send(`You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);}).catch((err) => {
                                 console.error("Error! ", err);
                               });
                             }).catch((error) => {
