@@ -22,11 +22,9 @@ module.exports.execute = async (client, message) => {
               );
 
               for(var i = 0; i < result.length; ++i){
-                var prettynumber = i + 1;
-
                 helpMessage.addField(
-                  `**${prettynumber}**`,
-                  `\`\`\`${result[i].team[0].toUpperCase() + result[i].team.slice(1)} - ${result[i].points}\`\`\``
+                  `**Team ${result[i].team[0].toUpperCase() + result[i].team.slice(1)}**`,
+                  `\`\`\`${result[i].points}\`\`\``
                 );
 
                 if (i == 9) break;
