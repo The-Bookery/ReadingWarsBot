@@ -36,7 +36,7 @@ module.exports.execute = async (client, message, args) => {
   var targetchannel;
   if (target == 1) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamOne);
   else if (target == 2) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamTwo);
-  else targetchannel = message.guild.cache.cache.find(channel => channel.id === config.channels.teamThree);
+  else targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamThree);
 
   pomMembers.sync().then(() => {
     pomMembers.findAll({
