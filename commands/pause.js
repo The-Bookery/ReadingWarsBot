@@ -17,7 +17,7 @@ module.exports.execute = async (client, message, args) => {
               pausedCommands.create({
                 name: args[0]
               }).then(() => {
-                return message.channel.send(`\`d-${args[0]}\` has been paused! It will remain paused until you \`b-unpause\` it.`);
+                return message.channel.send(`\`b-${args[0]}\` has been paused! It will remain paused until you \`b-unpause\` it.`);
               });
             } else {
               return message.channel.send('That command has already been paused!');

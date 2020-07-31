@@ -6,8 +6,8 @@ module.exports.execute = async (client, message) => {
       if (result.length > 0) {
         var paused;
         for(var i = 0; i < result.length; ++i){
-          if (i == 0) paused = '`d-' + result[0].name + '`';
-          else paused = paused + ', `d-' + result[0].name + '`';
+          if (i == 0) paused = '`b-' + result[0].name + '`';
+          else paused = paused + ', `b-' + result[0].name + '`';
         }
         return message.channel.send(`**Paused Commands**\n${paused}`);
       } else {
