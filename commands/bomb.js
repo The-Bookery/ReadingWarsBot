@@ -60,7 +60,7 @@ module.exports.execute = async (client, message, args) => {
                 team: wordteam,
               },
             }).then((teamresult) => {
-              if (teamresult[0].walls > 0) {
+              if (targetresult[0].walls > 0) {
                 pomTeams.findAll({
                   where: {
                     team: wordtarget,
@@ -72,7 +72,6 @@ module.exports.execute = async (client, message, args) => {
                   if (result[0].class == "joker" && Math.floor(Math.random() * 10) > 9 && targetresult[0].walls == 4) {newWalls = targetresult[0].walls - 4; addition = " with a +1 damage bonus from your joker class.";}
 
                   var verb;
-                  console.log(newWalls);
                   if (newWalls > 0) verb = "damaged";
                   else if (newWalls == 0) verb = `destroyed`;
 
@@ -90,7 +89,9 @@ module.exports.execute = async (client, message, args) => {
                         { bomb: teamresult[0].bomb + 1 },
                         { where: { team: wordteam }},
                       ).then(() => {
-                        return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} coin in the process and now have ${result[0].coins - 1}.`);
+                        let plural = "coins";
+                        if (penalty === 1) plural = "coin";
+                        return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
                       });
                     }).catch((error) => {
                       console.log('Update error: ' + error);

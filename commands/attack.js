@@ -142,8 +142,10 @@ module.exports.execute = async (client, message, args) => {
                               },
                               { where: { user: message.author.id } }
                             ).then(() => {
-                              var stole = "coins.";
-                              if (penalty == 0) stole = ", losing no coins because of your thief class!";
+                              let plural = "coins";
+                              if (requestedcoins - penalty === 1) plural = "coins";
+                              var stole = `${plural}.`;
+                              if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
                               return message.channel.send(`You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);}).catch((err) => {
                                 console.error("Error! ", err);
                               });

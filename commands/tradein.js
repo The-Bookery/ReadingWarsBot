@@ -2,6 +2,13 @@ const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 
+function pluralFinder(requestedcoins) {
+  let plural = "coins";
+  if (requestedcoins === 1)
+    plural = "coins";
+  return plural;
+}
+
 module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[0] && parseInt(args[0])) {
@@ -71,7 +78,7 @@ module.exports.execute = async (client, message, args) => {
                 tradein: teamresult[0].tradein + 1 },
               { where: { team: wordteam } }
             ).then(() => {
-              let plural = (requestedcoins === 1) ? "coin" : "coins";
+              let plural = pluralFinder(requestedcoins);
               let thief = "";
               if (bonus > 0) thief = `, stealing ${bonus} coins back,`;
               return message.channel.send(`You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newPoints - result[0].points} points${joker}. You now have a total of ${newPoints} and your team has a total of ${newTeamPoints}.`);

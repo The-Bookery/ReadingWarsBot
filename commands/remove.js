@@ -43,12 +43,14 @@ module.exports.execute = async (client, message, args) => {
         },
       }).then((result) => {
         if (result.length == 1) {
-          if (args[1] == "coins") {
+          if (args[2] == "coins") {
             pomMembers.update(
               { coins:  result[0].coins - args[3],},
               { where: { user: args[1] } }
             ).then(() => {
-              return message.channel.send(`${args[3]} coins have been removed from specified user.`);
+              let plural = "coins have";
+              if (requestedcoins === 1) plural = "coin has";
+              return message.channel.send(`${args[3]} ${plural} been removed from specified user.`);
             }).catch((error) => {
               console.log('Update error: ' + error);
             });
@@ -57,7 +59,9 @@ module.exports.execute = async (client, message, args) => {
               { points:  result[0].points - args[3],},
               { where: { user: args[1] } }
             ).then(() => {
-              return message.channel.send(`${args[3]} points has been removed from specified user.`);
+              let plural = "points have";
+              if (requestedcoins === 1) plural = "point has";
+              return message.channel.send(`${args[3]} ${plural} been removed from specified user.`);
             }).catch((error) => {
               console.log('Update error: ' + error);
             });
@@ -86,7 +90,10 @@ module.exports.execute = async (client, message, args) => {
                   { points: result[0].points - args[3]},
                   { where: { team: wordteam } }
                 ).then(() => {
-                  return message.channel.send(`${args[3]} points has been removed from specified team.`);
+                  let plural = "points have";
+                  if (requestedcoins === 1) plural = "point has";
+
+                  return message.channel.send(`${args[3]} ${plural} been removed from specified team.`);
                 }).catch((error) => {
                   console.log('Update error: ' + error);
                 });

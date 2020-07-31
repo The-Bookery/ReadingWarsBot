@@ -61,8 +61,9 @@ module.exports.execute = async (client, message) => {
                   { where: { user: message.author.id } }
                 ).then(() => {
                   if (walls == 6) walls = "6 (a bonus for being a stonemason)";
-
-                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} coins in the process${special}, and now have ${coins}.`);
+                  let plural = "coins";
+                  if (penalty === 1) plural = "coin";
+                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);
                 }).catch((error) => {
                   console.log('Update error: ' + error);
                 });
