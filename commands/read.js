@@ -59,7 +59,7 @@ module.exports.execute = async (client, message, args) => {
                 let plural = "coins";
                 console.log(result[0].coins + requestedcoins);
                 if (result[0].coins + requestedcoins == 1) plural = "coin";
-                return message.channel.send(`You now have ${result[0].coins + requestedcoins} ${plural} to use! You also got a bonus of ${requestedcoins * 50} points for your team.`);
+                return message.channel.send(`:book: You now have ${result[0].coins + requestedcoins} ${plural} to use! You also got a bonus of ${requestedcoins * 50} points for your team.`);
               }).catch((error) => {
                 console.log('Update error: ' + error);
               });

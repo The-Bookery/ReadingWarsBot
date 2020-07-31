@@ -29,6 +29,15 @@ module.exports.execute = async (client, message, args) => {
     return await message.channel.send('You can\'t target your own team!');
   }
 
+  if (target != 1 && target != 2 && target != 3) {
+    return await message.channel.send('Looks like your target isn\'t valid!');
+  }
+
+  var targetchannel;
+  if (target == 1) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamOne);
+  else if (target == 2) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamTwo);
+  else targetchannel = message.guild.cache.cache.find(channel => channel.id === config.channels.teamThree);
+
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
@@ -91,7 +100,8 @@ module.exports.execute = async (client, message, args) => {
                         ).then(() => {
                           let plural = "coins";
                           if (penalty === 1) plural = "coin";
-                          return message.channel.send(`You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
+                          targetchannel.send(`:bomb: You have been bombed by team ${teamresult[0].team}! Your walls are now at ${newWalls}.`);
+                          return message.channel.send(`:bomb: You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
                         });
                       }).catch((error) => {
                         console.log('Update error: ' + error);
@@ -104,7 +114,7 @@ module.exports.execute = async (client, message, args) => {
             });
           });
         } else {
-          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
+          return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');

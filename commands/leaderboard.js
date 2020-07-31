@@ -3,7 +3,6 @@ const pomTeams = require('../databaseFiles/pomTeams');
 const Sequelize = require('sequelize');
 
 module.exports.execute = async (client, message) => {
-
   try {
     pomTeams.sync().then(() => {
       pomTeams.findAll({

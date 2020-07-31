@@ -30,6 +30,13 @@ module.exports.execute = async (client, message, args) => {
     return await message.channel.send('You can\'t target your own team!');
   }
 
+  console.log(message.guild);
+
+  var targetchannel;
+  if (target == 1) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamOne);
+  else if (target == 2) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamTwo);
+  else targetchannel = message.guild.cache.cache.find(channel => channel.id === config.channels.teamThree);
+
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
@@ -146,7 +153,11 @@ module.exports.execute = async (client, message, args) => {
                               if (result[0].coins - penalty === 1) plural = "coins";
                               var stole = `${plural}.`;
                               if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
-                              return message.channel.send(`You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);}).catch((err) => {
+                              return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
+                              .then(() => {
+                                targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}.`);
+                              })
+                              .catch((err) => {
                                 console.error("Error! ", err);
                               });
                             }).catch((error) => {
@@ -172,8 +183,12 @@ module.exports.execute = async (client, message, args) => {
                       { coins: result[0].coins - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
-                      return message.channel.send(`You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
-                    }).catch((err) => {
+                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
+                    })
+                    .then(() => {
+                      targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked their attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
+                    })
+                    .catch((err) => {
                       console.error("Error! ", err);
                     });
                   }).catch((err) => {
@@ -186,14 +201,14 @@ module.exports.execute = async (client, message, args) => {
                 { coins: result[0].coins - 1 },
                 { where: { user: message.author.id }}
               ).then(() => {
-                return message.channel.send(`Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
+                return message.channel.send(`:x: Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
               });
             }
           }).catch((err) => {
             console.error("Error! ", err);
           });
         } else {
-          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
+          return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');

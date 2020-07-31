@@ -59,7 +59,7 @@ module.exports.execute = async (client, message, args) => {
 
           var newCoins = result[0].coins - requestedcoins + bonus;
           if (newCoins < 0) {
-            return message.channel.send(`Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
+            return message.channel.send(`:x: Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
           }
 
           var newPoints = result[0].points + (requestedcoins * 100);
@@ -81,7 +81,7 @@ module.exports.execute = async (client, message, args) => {
               let plural = pluralFinder(requestedcoins);
               let thief = "";
               if (bonus > 0) thief = `, stealing ${bonus} coins back,`;
-              return message.channel.send(`You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newPoints - result[0].points} points${joker}. You now have a total of ${newPoints} and your team has a total of ${newTeamPoints}.`);
+              return message.channel.send(`:handshake: You have traded in ${requestedcoins - bonus} ${plural}${thief} for ${newPoints - result[0].points} points${joker}. You now have a total of ${newPoints} and your team has a total of ${newTeamPoints}.`);
             });
           });
         });

@@ -17,7 +17,7 @@ function timedifference(timestamp1, timestamp2) {
 
   let difference = timestamp2.getTime() - timestamp1.getTime();
 
-  difference = Math.floor(difference / 100); // Hours `/ 1000 / 60 / 60`
+  difference = Math.floor(difference / 1000 / 60 / 60); // Hours `/ 1000 / 60 / 60`
 
   return difference;
 }
@@ -37,7 +37,7 @@ function addRole(message) {
     message.member.roles.add(teamrole);
     message.channel
       .send(
-        `You joined team ${teamchoice} as a ${gclass}!`
+        `:wave: You joined team ${teamchoice} as a ${gclass}!`
       );
   } catch (err) {
     console.log(err);
@@ -75,7 +75,7 @@ module.exports.execute = async (client, message, args) => {
                   ).then((leaveresult) => {
                     console.log(leaveresult);
                     if (leaveresult.length >= 1 && timedifference(leaveresult[0].time, Date.now()) < 24) {
-                        return message.channel.send(`Looks like you left in the last day! Please wait an additional ${24 - timedifference(leaveresult[0].time, Date.now())} hours before joining again.`);
+                        return message.channel.send(`:x: Looks like you left in the last day! Please wait an additional ${24 - timedifference(leaveresult[0].time, Date.now())} hours before joining again.`);
                     } else {
                       pomMembers.findAll().then((result) => {
 
@@ -187,7 +187,7 @@ module.exports.execute = async (client, message, args) => {
                 }
               });
             } else {
-              return message.channel.send('You have been banned from the competition.');
+              return message.channel.send(':x: You cannot join, as you have been banned from the competition.');
             }
           });
         });

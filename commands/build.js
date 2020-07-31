@@ -44,34 +44,40 @@ module.exports.execute = async (client, message) => {
 
           coins -= penalty;
 
+          console.log(coins);
+
           pomTeams.sync().then(() => {
             pomTeams.findAll({
               where: {
                 team: team,
               },
             }).then((teamresult) => {
-              pomTeams.update(
-                { walls: walls,
-                  build: teamresult[0].build + 1 },
-                { where: { team: team } }
-              ).then(() => {
-                pomMembers.update(
-                  { coins: coins,
-                    build: result[0].build + 1 },
-                  { where: { user: message.author.id } }
+              if (teamresult[0].walls < walls) {
+                pomTeams.update(
+                  { walls: walls,
+                    build: teamresult[0].build + 1 },
+                  { where: { team: team } }
                 ).then(() => {
-                  if (walls == 6) walls = "6 (a bonus for being a stonemason)";
-                  let plural = "coins";
-                  if (penalty === 1) plural = "coin";
-                  return message.channel.send(`You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);
-                }).catch((error) => {
-                  console.log('Update error: ' + error);
+                  pomMembers.update(
+                    { coins: coins,
+                      build: result[0].build + 1 },
+                    { where: { user: message.author.id } }
+                  ).then(() => {
+                    if (walls == 7) walls = "7 (a bonus for being a stonemason)";
+                    let plural = "coins";
+                    if (penalty === 1) plural = "coin";
+                    return message.channel.send(`:european_castle: You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);
+                  }).catch((error) => {
+                    console.log('Update error: ' + error);
+                  });
                 });
-              });
+              } else {
+                return message.channel.send('Looks like you can\'t build the walls up any more! You have been saved your coin.');
+              }
             });
           });
         } else {
-          return message.channel.send(`You don't have enough coins for this! You only have ${result[0].coins} coins.`);
+          return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');
