@@ -3,14 +3,10 @@ const connect = require('./connect.js');
 
 const sequelize = connect.sequelize;
 
-module.exports = sequelize.define('randomSeeds', {
-  random: {
+module.exports = sequelize.define('PausedCommands', {
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
-  },
-  time: {
-    type: Sequelize.STRING,
-    allowNull: false
   }
 });

@@ -1,8 +1,12 @@
 const Discord = require('discord.js');
+const pausedCommands = require('../databaseFiles/pausedCommands');
 
 module.exports.execute = async (client, message, args, prefix) => {
   let commands = client.commands;
   let commandNames = [];
+
+  await pausedCommands.sync();
+  var result = await pausedCommands.findAll();
 
   if (!args || args.length === 0) {
     let helpMessage = new Discord.MessageEmbed()
@@ -13,10 +17,17 @@ module.exports.execute = async (client, message, args, prefix) => {
       );
 
       commands.forEach((requestedcommand) => {
+        if (result.find(element => element.name == requestedcommand.config.name)) {
+          helpMessage.addField(
+            `\`\`\`${prefix}${requestedcommand.config.name}\`\`\` (**PAUSED**)`,
+            `${requestedcommand.config.description}`
+          );
+        } else {
           helpMessage.addField(
             `**${prefix}${requestedcommand.config.name}**`,
             `${requestedcommand.config.description}`
           );
+        }
       });
     try {
       return await message.channel.send(helpMessage);
