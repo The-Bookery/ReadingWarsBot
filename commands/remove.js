@@ -108,7 +108,7 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.config = {
   name: 'remove',
-  aliases: [],
+  aliases: ['remove'],
   description: 'Removes coins or points from a user.',
   usage: ['remove <user ID> <coins | points> <amount>'],
 };

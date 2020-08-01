@@ -164,7 +164,7 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.config = {
   name: 'place',
-  aliases: [],
+  aliases: ['place'],
   description: 'Manually put a member on a specific team.',
   usage: ['place <user ID> <team #> <class>'],
 };

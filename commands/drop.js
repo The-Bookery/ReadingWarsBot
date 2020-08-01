@@ -18,7 +18,7 @@ module.exports.execute = async (client, message) => {
 
 module.exports.config = {
   name: 'drop',
-  aliases: [],
+  aliases: ['drop'],
   description: 'Drops all tables.',
   usage: ['drop'],
 };

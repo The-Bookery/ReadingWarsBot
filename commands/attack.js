@@ -221,7 +221,7 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.config = {
   name: 'attack',
-  aliases: [],
+  aliases: ['attack'],
   description: 'Breaks down three walls at a time.',
   usage: ['bomb [team number]'],
 };

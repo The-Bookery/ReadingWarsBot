@@ -44,6 +44,7 @@ module.exports.execute = async (client, message, args, prefix) => {
     );
 
     if (command) {
+      console.log(command);
       let helpMessage = new Discord.MessageEmbed()
         .setColor('#750384')
         .setTitle(`${prefix}${command.config.name}`)

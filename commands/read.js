@@ -77,5 +77,5 @@ module.exports.config = {
   name: 'read',
   aliases: ['r'],
   description: 'Adds coins to your score for later use, and adds a bonus of 50 points per read for your team. Optional entry for how many reads you\'ve done.',
-  usage: ['read ['],
+  usage: ['read [times]'],
 };

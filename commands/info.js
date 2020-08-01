@@ -34,7 +34,7 @@ module.exports.execute = async (client, message) => {
 
 module.exports.config = {
   name: 'info',
-  aliases: [],
+  aliases: ['info'],
   description: 'Learn info about the game.',
   usage: ['hello'],
 };
