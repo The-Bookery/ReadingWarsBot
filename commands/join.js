@@ -48,10 +48,10 @@ module.exports.execute = async (client, message, args) => {
   if (args[0]) {
     gclass = args[0].toLowerCase();
     if (gclass !== "knight" && gclass !== "thief" && gclass !== "stonemason" && gclass !== "joker") {
-      return await message.channel.send('Please choose a valid class name! (Use `,help join` to see how to use this command.)');
+      return await message.channel.send('Please choose a valid class name! (Use `b-help join` to see how to use this command.)');
     }
   } else {
-    return await message.channel.send('Please choose a class! (Use `,help join` to see how to use this command.)');
+    return await message.channel.send('Please choose a class! (Use `b-help join` to see how to use this command.)');
   }
 
   try {
