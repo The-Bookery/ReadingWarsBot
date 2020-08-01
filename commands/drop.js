@@ -44,7 +44,7 @@ module.exports.execute = async (client, message) => {
                   .then(pomBans.drop()
                   .then(pomLeaves.drop()
                   .then(pomTeams.drop().then(
-                    message.channel.send(`Custom channel database has been wiped!`)
+                    message.channel.send(`All databases have been wiped!`)
                   ))));
                 });
               });
