@@ -9,6 +9,9 @@ module.exports.execute = async (client, message, args) => {
     if (requestedcoins < 1) {
       return await message.channel.send('You must have a number greater than 0!');
     }
+    if (requestedcoins > 24) {
+      return await message.channel.send('You cannot log more than 24 coins at once! (I.e. 6 hours)');
+    } 
   } else if (!args[0]) {
     requestedcoins = 1;
   } else {
