@@ -69,4 +69,5 @@ module.exports.config = {
   aliases: ['setup'],
   description: 'Set up the important database before use. This is vital before you begin, otherwise it won\'t log any coins for teams.',
   usage: ['setup'],
+  adminonly: true,
 };

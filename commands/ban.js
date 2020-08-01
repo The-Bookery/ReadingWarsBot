@@ -122,4 +122,5 @@ module.exports.config = {
   aliases: ['banuser'],
   description: 'Removes a person from the competition and blocks them from joining again.',
   usage: ['ban [user ID]'],
+  adminonly: true,
 };

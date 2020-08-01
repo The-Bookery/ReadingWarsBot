@@ -73,7 +73,6 @@ module.exports.execute = async (client, message, args) => {
                   pomLeaves.findAll(
                     { where: {user: message.author.id } }
                   ).then((leaveresult) => {
-                    console.log(leaveresult);
                     if (leaveresult.length >= 1 && timedifference(leaveresult[0].time, Date.now()) < 24) {
                         return message.channel.send(`:x: Looks like you left in the last day! Please wait an additional ${24 - timedifference(leaveresult[0].time, Date.now())} hours before joining again.`);
                     } else {
@@ -94,7 +93,6 @@ module.exports.execute = async (client, message, args) => {
                           teamthreecount = result.length - (teamonecount + teamtwocount);
 
                           // Do math to determine where to put user
-                          console.log(leaveresult);
                           if (leaveresult.length == 0) {
                             if (teamonecount <= teamtwocount && teamonecount <= teamthreecount) {
                               teamchoice = 1;

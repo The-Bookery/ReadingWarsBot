@@ -40,4 +40,5 @@ module.exports.config = {
   aliases: ['pausecommand'],
   description: 'Pauses commands so they can\'t be used by anyone but admins.',
   usage: ['pause [command name]'],
+  adminonly: true,
 };

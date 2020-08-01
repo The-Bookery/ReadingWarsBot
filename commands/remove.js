@@ -49,7 +49,7 @@ module.exports.execute = async (client, message, args) => {
               { where: { user: args[1] } }
             ).then(() => {
               let plural = "coins have";
-              if (requestedcoins === 1) plural = "coin has";
+              if (args[3] === 1) plural = "coin has";
               return message.channel.send(`${args[3]} ${plural} been removed from specified user.`);
             }).catch((error) => {
               console.log('Update error: ' + error);
@@ -60,7 +60,7 @@ module.exports.execute = async (client, message, args) => {
               { where: { user: args[1] } }
             ).then(() => {
               let plural = "points have";
-              if (requestedcoins === 1) plural = "point has";
+              if (args[3] === 1) plural = "point has";
               return message.channel.send(`${args[3]} ${plural} been removed from specified user.`);
             }).catch((error) => {
               console.log('Update error: ' + error);
@@ -85,13 +85,13 @@ module.exports.execute = async (client, message, args) => {
               },
             }).then((result) => {
               if (result.length == 1) {
-                console.log(result[0].points);
+                console.log(result[0].points - args[3]);
                 pomTeams.update(
                   { points: result[0].points - args[3]},
                   { where: { team: wordteam } }
                 ).then(() => {
                   let plural = "points have";
-                  if (requestedcoins === 1) plural = "point has";
+                  if (args[3] === 1) plural = "point has";
 
                   return message.channel.send(`${args[3]} ${plural} been removed from specified team.`);
                 }).catch((error) => {
@@ -110,5 +110,6 @@ module.exports.config = {
   name: 'remove',
   aliases: ['remove'],
   description: 'Removes coins or points from a user.',
-  usage: ['remove <user ID> <coins | points> <amount>'],
+  usage: ['remove <team | user> <user ID> <coins | points> <amount>'],
+  adminonly: true,
 };

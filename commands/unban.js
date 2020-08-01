@@ -39,4 +39,5 @@ module.exports.config = {
   aliases: ['unbanuser'],
   description: 'Allows a user to join after being banned.',
   usage: ['unban [user ID]'],
+  adminonly: true,
 };

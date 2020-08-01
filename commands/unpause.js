@@ -32,4 +32,5 @@ module.exports.config = {
   aliases: ['unpausecommand'],
   description: 'Unpauses commands so they can be used by everyone.',
   usage: ['unpause [command name]'],
+  adminonly: true,
 };

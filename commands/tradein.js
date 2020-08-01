@@ -13,7 +13,6 @@ module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[0] && parseInt(args[0])) {
     requestedcoins = Math.floor(parseInt(args[0]));
-    console.log(requestedcoins);
     if (requestedcoins < 1) {
       return await message.channel.send('You must have a number greater than 0!');
     }

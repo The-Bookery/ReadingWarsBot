@@ -30,8 +30,6 @@ module.exports.execute = async (client, message, args) => {
     return await message.channel.send('You can\'t target your own team!');
   }
 
-  console.log(message.guild);
-
   var targetchannel;
   if (target == 1) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamOne);
   else if (target == 2) targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamTwo);
@@ -79,8 +77,6 @@ module.exports.execute = async (client, message, args) => {
 
             var stolen = randomInteger(500, 750);
             var generatedRandom = Math.floor(Math.random() * 100);
-            console.log(generatedRandom);
-
 
             if (generatedRandom > random) {
               pomTeams.findAll({
@@ -101,7 +97,6 @@ module.exports.execute = async (client, message, args) => {
                     if (toremove > targetresult[0].points) toremove = targetresult[0].points;
 
                     while (toremove > 0) {
-                      console.log(rankedresult);
                       if (rankedresult[i]) {
                         if (rankedresult[i].team == target) {
                           if (rankedresult[i].points >= stolen) {

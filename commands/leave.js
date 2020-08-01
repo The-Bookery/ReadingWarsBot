@@ -35,8 +35,6 @@ module.exports.execute = async (client, message, args) => {
           }).then((result) => {
             var wordteam;
 
-            console.log(result);
-
             if (result[0].team == 1) {
               wordteam = "one";
             } else if (result[0].team == 2) {
@@ -50,7 +48,6 @@ module.exports.execute = async (client, message, args) => {
             pomLeaves.findAll(
               { where: { user: message.author.id } },
             ).then((leaveresult) => {
-              console.log(leaveresult);
               if (leaveresult.length >= 1) {
                 pomLeaves.destroy({
                   where: {
@@ -70,7 +67,6 @@ module.exports.execute = async (client, message, args) => {
                   team: wordteam,
                 },
               }).then((teamresult) => {
-                console.log(teamresult[0].points - result[0].points);
                 pomTeams.update(
                   {
                     points: teamresult[0].points - result[0].points,

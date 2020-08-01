@@ -17,15 +17,18 @@ module.exports.execute = async (client, message, args, prefix) => {
       );
 
       commands.forEach((requestedcommand) => {
+        var adminonly = "";
+        if (requestedcommand.config.adminonly == true) adminonly = "**(Admin Only)** ";
+
         if (result.find(element => element.name == requestedcommand.config.name)) {
           helpMessage.addField(
             `\`\`\`${prefix}${requestedcommand.config.name}\`\`\` (**PAUSED**)`,
-            `${requestedcommand.config.description}`
+            `${adminonly}${requestedcommand.config.description}`
           );
         } else {
           helpMessage.addField(
             `**${prefix}${requestedcommand.config.name}**`,
-            `${requestedcommand.config.description}`
+            `${adminonly}${requestedcommand.config.description}`
           );
         }
       });

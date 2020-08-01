@@ -21,4 +21,5 @@ module.exports.config = {
   aliases: ['drop'],
   description: 'Wipes all tables and resets the entire game. (Does not remove roles)',
   usage: ['drop'],
+  adminonly: true,
 };
