@@ -32,7 +32,7 @@ module.exports.execute = async (client, message, args) => {
   } else if (message.channel.id === config.channels.teamThree) {
     wordteam = "three";
   } else {
-    return await message.channel.send('Not the correct channel!');
+    return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
 
 

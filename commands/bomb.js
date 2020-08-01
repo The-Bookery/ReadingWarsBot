@@ -16,7 +16,7 @@ module.exports.execute = async (client, message, args) => {
     team = 3;
     wordteam = "three";
   } else {
-    return await message.channel.send('Not the correct channel!');
+    return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
 
   if (args[0] != 1 && args[0] != 2 && args[0] != 3) {
