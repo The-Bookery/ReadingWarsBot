@@ -18,7 +18,9 @@ module.exports.execute = async (client, message) => {
         if (m.content.includes('yes') || m.content.includes('y')) {
           pomTeams.sync().then(() => {
             pomMembers.sync().then(() => {
-              pomTeams.findAll().then((result) => {
+              pomTeams.findAll({
+                attributes: [knights, thieves, jokers, stonemasons]
+              }).then((result) => {
                 var members = result[0].knights + result[0].thieves + result[0].jokers + result[0].stonemasons + result[1].knights + result[1].thieves + result[1].jokers + result[1].stonemasons + result[2].knights + result[2].thieves + result[2].jokers + result[2].stonemasons;
 
                 pomMembers.findAll().then((memberresult) => {
