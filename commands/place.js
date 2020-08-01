@@ -38,6 +38,9 @@ module.exports.execute = async (client, message, args) => {
     return await message.channel.send('Looks like you didn\'t input a proper number.');
   }
 
+  var member = message.guild.members.cache.get(args[0]);
+  if (!member) return message.channel.send('Looks like your ID doesn\'t correspond to any member in this server!');
+
   if (message.member.hasPermission('ADMINISTRATOR')) {
     if (args[1]) {
       teamchoice = args[1].toLowerCase();
@@ -63,18 +66,16 @@ module.exports.execute = async (client, message, args) => {
           pomBans.sync().then(() => {
             pomBans.findAll({
               where: {
-                user: message.author.id,
+                user: args[0],
               },
             }).then((bansresult) => {
               if (bansresult.length == 0) {
                 pomMembers.findAll({
                   where: {
-                    user: message.author.id,
+                    user: args[0],
                   },
                 }).then((result) => {
                   if (result.length == 0) {
-                    var member = message.guild.members.cache.get(args[0]);
-                    if (!member) return message.channel.send('Looks like your ID doesn\'t correspond to any member in this server!');
 
                     // Do math to determine where to put user
                     if (teamchoice == 1) {
