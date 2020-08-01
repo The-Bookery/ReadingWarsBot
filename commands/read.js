@@ -76,6 +76,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'read',
   aliases: ['r'],
-  description: 'Adds coins to your score for later use, and adds a bonus of 50 points per read for your team. Optional entry for how many reads you\'ve done.',
+  description: 'Adds coins to your score for later use, and adds a bonus of 50 points per coin for your team. Optional entry for how many reads you\'ve done.',
   usage: ['read [times]'],
 };
