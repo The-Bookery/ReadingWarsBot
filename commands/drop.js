@@ -21,32 +21,36 @@ module.exports.execute = async (client, message) => {
               pomTeams.findAll({
                 attributes: ['knights', 'thieves', 'jokers', 'stonemasons']
               }).then((result) => {
-                var members = result[0].knights + result[0].thieves + result[0].jokers + result[0].stonemasons + result[1].knights + result[1].thieves + result[1].jokers + result[1].stonemasons + result[2].knights + result[2].thieves + result[2].jokers + result[2].stonemasons;
+                try {
+                  var members = result[0].knights + result[0].thieves + result[0].jokers + result[0].stonemasons + result[1].knights + result[1].thieves + result[1].jokers + result[1].stonemasons + result[2].knights + result[2].thieves + result[2].jokers + result[2].stonemasons;
 
-                pomMembers.findAll().then((memberresult) => {
-                  const guild = client.guilds.cache.get(message.guild.id);
+                  pomMembers.findAll().then((memberresult) => {
+                    const guild = client.guilds.cache.get(message.guild.id);
 
-                  for(var i = 0; i < members; ++i){
-                    var member = guild.members.cache.get(memberresult[i].user);
+                    for(var i = 0; i < members; ++i){
+                      var member = guild.members.cache.get(memberresult[i].user);
 
-                    const role1 = member.roles.cache.find(role => role.id === config.roles.teamone);
-                    const role2 = member.roles.cache.find(role => role.id === config.roles.teamtwo);
-                    const role3 = member.roles.cache.find(role => role.id === config.roles.teamthree);
+                      const role1 = member.roles.cache.find(role => role.id === config.roles.teamone);
+                      const role2 = member.roles.cache.find(role => role.id === config.roles.teamtwo);
+                      const role3 = member.roles.cache.find(role => role.id === config.roles.teamthree);
 
-                    if (role1) member.roles.remove(role1);
-                    else if (role2) member.roles.remove(role2);
-                    else if (role3) member.roles.remove(role3);
+                      if (role1) member.roles.remove(role1);
+                      else if (role2) member.roles.remove(role2);
+                      else if (role3) member.roles.remove(role3);
 
-                    console.log(`Removed member ${i} of ${members}.`);
-                  }
+                      console.log(`Removed member ${i} of ${members}.`);
+                    }
+                  });
+                } catch (err) {
+                  console.error(err);
+                }
 
-                  pomMembers.drop()
-                  .then(pomBans.drop()
-                  .then(pomLeaves.drop()
-                  .then(pomTeams.drop().then(
-                    message.channel.send(`All databases have been wiped!`)
-                  ))));
-                });
+                pomMembers.drop()
+                .then(pomBans.drop()
+                .then(pomLeaves.drop()
+                .then(pomTeams.drop().then(
+                  message.channel.send(`All databases have been wiped!`)
+                ))));
               });
             });
           });

@@ -203,7 +203,7 @@ module.exports.execute = async (client, message, args) => {
                                 if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
                                 return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
                                 .then(() => {
-                                  targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}.`);
+                                  targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}. <@&${config.roles.pingrole}>`);
                                 })
                                 .catch((err) => {
                                   console.error("Error! ", err);
