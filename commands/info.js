@@ -17,7 +17,7 @@ module.exports.execute = async (client, message) => {
     .addFields(
       { name: `\`b-read [times]\``, value: `This command should be run after doing 25 minutes of reading. Feel free to add a number afterward (e.g. \`b-read 3\`) for a certain number of 25-minute reading. Be sure to actually time yourself while doing this, and stay honest or you could get banned from the event and even future events.` },
       { name: `\`b-attack <team number>\``, value: `This will attempt an attack against the team you target. It can fail on occasion, making you lose the coin, and can be blocked by walls, which will also make you lose the coin. If it succeeds it will take a random amount of coins from the opposing team's top players, and give it to you.`},
-      { name: `\`b-tradein [number]\``, value: `This is a safer but less effective way of getting points than attacking. It has an exchange rate of 50 points to 1 coin, which is far from the potential for attack, which is in the 700's. It is suggested you use this more in the early game before the other teams have enough points for your attacks to be useful, however.`}
+      { name: `\`b-tradein [number]\``, value: `This is a safer but less effective way of getting points than attacking. It has an exchange rate of 1 coin to 50 points, which is far from the potential for attack, which is in the 700's. It is suggested you use this more in the early game before the other teams have enough points for your attacks to be useful, however.`}
     ),
     new Discord.MessageEmbed()
     .setColor('#750384')
