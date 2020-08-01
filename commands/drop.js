@@ -34,6 +34,8 @@ module.exports.execute = async (client, message) => {
                     if (role1) member.roles.remove(role1);
                     else if (role2) member.roles.remove(role2);
                     else if (role3) member.roles.remove(role3);
+
+                    console.log(`Removed member ${i} of ${members}.`);
                   }
 
                   pomMembers.drop()
