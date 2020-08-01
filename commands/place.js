@@ -71,8 +71,8 @@ module.exports.execute = async (client, message, args) => {
                   where: {
                     user: message.author.id,
                   },
-                }).then((banresult) => {
-                  if (banresult.length == 0) {
+                }).then((result) => {
+                  if (result.length == 0) {
                     var member = message.guild.members.cache.get(args[0]);
                     if (!member) return message.channel.send('Looks like your ID doesn\'t correspond to any member in this server!');
 
@@ -143,6 +143,7 @@ module.exports.execute = async (client, message, args) => {
                       console.error('Team error: ', err);
                     });
                   } else {
+                    console.log(result);
                     return message.channel.send('That user is already in the competition!');
                   }
                 });
