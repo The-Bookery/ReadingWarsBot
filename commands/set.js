@@ -81,7 +81,7 @@ module.exports.execute = async (client, message, args) => {
       message.channel.send('**Warning!** THIS CAN MESS EVERYTHING UP! This does not sync with a specific user, and a specific user\'s points (or coins) must be changed manually. Only use if something has broken. Do you want to proceed? (yes/no)').then((warningmessage) => {
         const filter = m => m.author.id === message.author.id
         && m.content.includes('yes')
-        || m.content.includes('yes')
+        || m.content.includes('no')
         || m.content.includes('y')
         || m.content.includes('n');
         const collector = warningmessage.channel.createMessageCollector(filter, { time: 15000 });

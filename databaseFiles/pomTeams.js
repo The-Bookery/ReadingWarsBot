@@ -57,6 +57,19 @@ module.exports = sequelize.define('PStats', {
   bomb: {
     type: Sequelize.INTEGER,
     allowNull: false,
-  }
+  },
   // End stats
+  // The following is for attack cooldown
+  teamone: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  teamtwo: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  teamthree: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  }
 });

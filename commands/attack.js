@@ -3,8 +3,47 @@ const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 const Sequelize = require('sequelize');
 
+// call function with variables timestamp1 and timestamp2 in call
+function timedifference(timestamp1, timestamp2) {
+  // redefine the variables
+  timestamp1 = new Date(parseInt(timestamp1));
+  timestamp2 = new Date(parseInt(timestamp2));
+
+  let difference = timestamp2.getTime() - timestamp1.getTime();
+
+  difference = Math.floor(difference / 1000 / 60 / 60);
+
+  return difference;
+}
+
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function updateCooldown(wordtarget, wordteam) {
+  if (wordtarget == "one") {
+    pomTeams.update(
+      { teamone: Date.now() },
+      { where: { team: wordteam } }
+    ).then(() => {
+      return true;
+    });
+  } else if (wordtarget == "two") {
+    pomTeams.update(
+      { teamtwo: Date.now() },
+      { where: { team: wordteam } }
+    ).then(() => {
+      return true;
+    });
+  } else {
+    pomTeams.update(
+      { teamthree: Date.now() },
+      { where: { team: wordteam } }
+    ).then(() => {
+      return true;
+    });
+  }
+  return false;
 }
 
 module.exports.execute = async (client, message, args) => {
@@ -124,47 +163,63 @@ module.exports.execute = async (client, message, args) => {
                           team: wordteam
                         }
                       }).then((teamresult) => {
-                        var newPoints = targetresult[0].points - stolen;
-                        if (newPoints < 0) newPoints = 0;
-                        var givenPoints = targetresult[0].points - newPoints;
+                        var timediff;
+                        if (wordtarget == "one") {
+                          timediff = timedifference(teamresult[0].teamone, Date.now());
+                        } else if (wordtarget == "two") {
+                          timediff = timedifference(teamresult[0].teamtwo, Date.now());
+                          console.log(teamresult[0].teamtwo);
+                        } else {
+                          timediff = timedifference(teamresult[0].teamthree, Date.now());
+                        }
 
-                        pomTeams.update(
-                          { points: newPoints },
-                          { where: { team: wordtarget } }
-                        ).then(() => {
+                        console.log(timediff);
+
+                        if (timediff >= 30) {
+                          var newPoints = targetresult[0].points - stolen;
+                          if (newPoints < 0) newPoints = 0;
+                          var givenPoints = targetresult[0].points - newPoints;
+
                           pomTeams.update(
-                            { points: teamresult[0].points + givenPoints,
-                              attack: teamresult[0].attack + 1 },
-                            { where: { team: wordteam }},
+                            { points: newPoints },
+                            { where: { team: wordtarget } }
                           ).then(() => {
-                            pomMembers.update(
-                              { coins: result[0].coins - penalty,
-                                points: result[0].points + stolen,
-                                attack: result[0].attack + 1,
-                              },
-                              { where: { user: message.author.id } }
+                            pomTeams.update(
+                              { points: teamresult[0].points + givenPoints,
+                                attack: teamresult[0].attack + 1 },
+                              { where: { team: wordteam }},
                             ).then(() => {
-                              let plural = "coins";
-                              if (result[0].coins - penalty === 1) plural = "coins";
-                              var stole = `${plural}.`;
-                              if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
-                              return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
-                              .then(() => {
-                                targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}.`);
-                              })
-                              .catch((err) => {
-                                console.error("Error! ", err);
+                              pomMembers.update(
+                                { coins: result[0].coins - penalty,
+                                  points: result[0].points + stolen,
+                                  attack: result[0].attack + 1,
+                                },
+                                { where: { user: message.author.id } }
+                              ).then(() => {
+                                let plural = "coins";
+                                if (result[0].coins - penalty === 1) plural = "coins";
+                                var stole = `${plural}.`;
+                                updateCooldown(wordtarget, wordteam);
+                                if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
+                                return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
+                                .then(() => {
+                                  targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}.`);
+                                })
+                                .catch((err) => {
+                                  console.error("Error! ", err);
+                                });
+                              }).catch((error) => {
+                                console.log('Update error: ' + error);
                               });
-                            }).catch((error) => {
-                              console.log('Update error: ' + error);
+                            }).catch((err) => {
+                              console.error("Error! ", err);
                             });
-                          }).catch((err) => {
-                            console.error("Error! ", err);
-                          });
-                        }).catch((err) => {
-                          console.error("Error! ", err);
-                        });
-
+                        } else {
+                          return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
+                        }
+                      }).catch((err) => {
+                        console.error("Error! ", err);
+                      });
                     } else {
                       return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
                     }

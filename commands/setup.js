@@ -19,6 +19,9 @@ module.exports.execute = async (client, message) => {
             attack: 0,
             build: 0,
             bomb: 0,
+            teamone: 0,
+            teamtwo: 0,
+            teamthree: 0,
           }).then(() => {
             pomTeams.create({
               team: "two",
@@ -34,6 +37,9 @@ module.exports.execute = async (client, message) => {
               attack: 0,
               build: 0,
               bomb: 0,
+              teamone: 0,
+              teamtwo: 0,
+              teamthree: 0,
             }).then(() => {
               pomTeams.create({
                 team: "three",
@@ -49,6 +55,9 @@ module.exports.execute = async (client, message) => {
                 attack: 0,
                 build: 0,
                 bomb: 0,
+                teamone: 0,
+                teamtwo: 0,
+                teamthree: 0,
               }).then(() => {
                 return message.channel.send('Team database has been set up.');
               });
