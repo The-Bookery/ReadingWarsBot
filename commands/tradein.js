@@ -93,6 +93,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'tradein',
   aliases: ['tradein'],
-  description: 'Trade in an amount of coins at a rate of 50 points per coin!',
+  description: 'Trade in any amount of coins at a rate of 50 points per coin!',
   usage: ['tradein [coins (leave blank for 1)]'],
 };
