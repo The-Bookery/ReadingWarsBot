@@ -19,6 +19,6 @@ module.exports.execute = async (client, message) => {
 module.exports.config = {
   name: 'drop',
   aliases: ['drop'],
-  description: 'Drops all tables.',
+  description: 'Wipes all tables and resets the entire game. (Does not remove roles)',
   usage: ['drop'],
 };
