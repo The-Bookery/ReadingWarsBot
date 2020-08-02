@@ -14,7 +14,7 @@ You can also join a class, which will give you different buffs to play to your s
       value: `This will attempt an attack against the team you target. It can fail on occasion, making you lose the coin, and can be blocked by walls, which will also make you lose the coin. If it succeeds, it will take a random amount of coins from the opposing team's top players, and give it to you.`
     }, {
       name: `\`b-tradein [number]\``,
-      value: `This is a safer but less effective way of getting points than attacking. It has an exchange rate of 1 coin to 50 points, which is far from the potential for attack, which is in the 700's. It is suggested you use this more in the early game before the other teams have enough points for your attacks to be useful, however.`
+      value: `This is a safer but less effective way of getting points than attacking. It has an exchange rate of 100 points to 1 coin, which is far from the potential for attack. It is suggested you use this more in the early game before the other teams have enough points for your attacks to be useful, however.`
     }, {
       name: `\`b-bomb <team number>\``,
       value: `This command does three damage to whichever team's walls you target. It is more more efficient than the attack command, therefore, because it is 100% consistent and does far more damage to walls than attacks do. However, it does not earn you any points.`

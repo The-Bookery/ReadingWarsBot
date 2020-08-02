@@ -44,21 +44,21 @@ module.exports.execute = async (client, message, args) => {
           var bonus = 0;
           if (result[0].class == "thief") {
             for (var i = 0; i < requestedcoins; ++i) {
-              var random = Math.floor(Math.random() * 10);
-              if (random == 9) bonus += 1;
+              var random = Math.floor(Math.random() * 10) + 1;
+              if (random >= 8) bonus += 1;
             }
           }
           var newCoins = result[0].coins - requestedcoins + bonus;
           if (newCoins < 0) {
             return message.channel.send(`:x: Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
           }
-          var newPoints = result[0].points + (requestedcoins * 50);
+          var newPoints = result[0].points + (requestedcoins * 100);
           var joker = "";
-          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {
+          if (result[0].class == "joker" && Math.floor(Math.random() * 10) + 1 == 9) {
             newPoints = newPoints + requestedcoins * 50;
             joker = ", with a 50% bonus from your joker class";
           }
-          var newTeamPoints = teamresult[0].points + (requestedcoins * 50);
+          var newTeamPoints = teamresult[0].points + (requestedcoins * 100);
           pomMembers.update({
             points: newPoints,
             coins: newCoins,
@@ -90,6 +90,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'tradein',
   aliases: ['tradein'],
-  description: 'Trade in coins at a rate of 50 points per coin!',
+  description: 'Trade in coins at a rate of 100 points per coin!',
   usage: ['tradein [coins (leave blank for 1)]'],
 };

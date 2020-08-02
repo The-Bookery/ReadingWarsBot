@@ -2,9 +2,16 @@ const config = require('../config.json');
 
 function addRole(message) {
   try {
-    pingrole = message.guild.roles.cache.find(role => role.id === config.roles.pingrole);
-    message.member.roles.add(pingrole);
-    message.channel.send(`:white_check_mark: You will now be pinged for important events!`);
+    const member = message.guild.members.cache.get(message.author.id);
+    const pingrole = message.guild.roles.cache.find(role => role.id === config.roles.pingrole);
+
+    if (message.member.roles.cache.find(role => role.id === config.roles.pingrole)) {
+      member.roles.remove(pingrole);
+      return message.channel.send(`:white_check_mark: You will no longer be pinged for important events!`);
+    } else {
+      message.member.roles.add(pingrole);
+      return message.channel.send(`:white_check_mark: You will now be pinged for important events!`);
+    }
   } catch (err) {
     console.log(err);
   }
