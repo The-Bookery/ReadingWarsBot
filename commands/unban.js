@@ -1,14 +1,11 @@
 const pomBans = require('../databaseFiles/pomBans');
-
 module.exports.execute = async (client, message, args) => {
   if (!args[0]) {
     return await message.channel.send("Please add a subcommand!");
   }
-
   if (!parseInt(args[0])) {
     return await message.channel.send("Please make sure you use a user ID!");
   }
-
   if (message.member.hasPermission('ADMINISTRATOR')) {
     pomBans.sync().then(() => {
       pomBans.findAll({
@@ -33,7 +30,6 @@ module.exports.execute = async (client, message, args) => {
     return message.channel.send('You do not have permission to unban a user from the challenge!');
   }
 };
-
 module.exports.config = {
   name: 'unban',
   aliases: ['unbanuser'],

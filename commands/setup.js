@@ -1,5 +1,4 @@
 const pomTeams = require('../databaseFiles/pomTeams');
-
 module.exports.execute = async (client, message) => {
   if (message.member.hasPermission('ADMINISTRATOR')) {
     pomTeams.sync().then(() => {
@@ -72,7 +71,6 @@ module.exports.execute = async (client, message) => {
     return message.channel.send('You must be an admin to set up the databases!');
   }
 };
-
 module.exports.config = {
   name: 'setup',
   aliases: ['setup'],

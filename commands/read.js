@@ -1,7 +1,6 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
-
 module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[0] && parseInt(args[0])) {
@@ -11,15 +10,13 @@ module.exports.execute = async (client, message, args) => {
     }
     if (requestedcoins > 24) {
       return await message.channel.send('You cannot log more than 24 coins at once! (I.e. 6 hours)');
-    } 
+    }
   } else if (!args[0]) {
     requestedcoins = 1;
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
-
   var team;
-
   if (message.channel.id === config.channels.teamOne) {
     team = "one";
   } else if (message.channel.id === config.channels.teamTwo) {
@@ -29,7 +26,6 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
-
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
@@ -38,7 +34,6 @@ module.exports.execute = async (client, message, args) => {
     }).then((result) => {
       var coins = parseInt(result[0].coins) + requestedcoins;
       var points = parseInt(result[0].points) + (requestedcoins * 50);
-
       if (result.length == 1) {
         pomTeams.sync().then(() => {
           pomTeams.findAll({
@@ -47,17 +42,23 @@ module.exports.execute = async (client, message, args) => {
             },
           }).then((teamresult) => {
             var teamcoins = teamresult[0].points + (requestedcoins * 50);
-            pomTeams.update(
-              { points: teamcoins,
-                read: teamresult[0].read + requestedcoins },
-              { where: { team: team } }
-            ).then(() => {
-              pomMembers.update(
-                { coins:  coins,
-                  points: points,
-                  read: result[0].read + requestedcoins },
-                { where: { user: message.author.id } }
-              ).then(() => {
+            pomTeams.update({
+              points: teamcoins,
+              read: teamresult[0].read + requestedcoins
+            }, {
+              where: {
+                team: team
+              }
+            }).then(() => {
+              pomMembers.update({
+                coins: coins,
+                points: points,
+                read: result[0].read + requestedcoins
+              }, {
+                where: {
+                  user: message.author.id
+                }
+              }).then(() => {
                 let plural = "coins";
                 if (result[0].coins + requestedcoins == 1) plural = "coin";
                 return message.channel.send(`:book: You now have ${result[0].coins + requestedcoins} ${plural} to use! You also got a bonus of ${requestedcoins * 50} points for your team.`);
@@ -73,7 +74,6 @@ module.exports.execute = async (client, message, args) => {
     });
   });
 };
-
 module.exports.config = {
   name: 'read',
   aliases: ['r'],

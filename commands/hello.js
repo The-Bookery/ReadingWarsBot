@@ -1,5 +1,4 @@
 const config = require('../config.json');
-
 module.exports.execute = async (client, message) => {
   if (message.channel.id === config.channels.teamOne) {
     return await message.channel.send('Hey there, member of team one!');
@@ -11,7 +10,6 @@ module.exports.execute = async (client, message) => {
     return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
 };
-
 module.exports.config = {
   name: 'hello',
   aliases: ['hello'],

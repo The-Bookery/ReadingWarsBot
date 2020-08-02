@@ -1,18 +1,17 @@
 const pausedCommands = require('../databaseFiles/pausedCommands');
-
 module.exports.execute = async (client, message, args) => {
   if (message.member.hasPermission('ADMINISTRATOR')) {
     let commands = client.commands;
-
     if (args[0]) {
       const found = commands.find(element => element.config.name == args[0]);
-
       if (found) {
         var command = args[0];
         pausedCommands.sync().then(() => {
-          pausedCommands.findAll(
-            { where: {name: command }}
-          ).then((result) => {
+          pausedCommands.findAll({
+            where: {
+              name: command
+            }
+          }).then((result) => {
             if (result.length == 0) {
               pausedCommands.create({
                 name: args[0]
@@ -34,7 +33,6 @@ module.exports.execute = async (client, message, args) => {
     return message.channel.send(':x: You do not have permission pause a command!');
   }
 };
-
 module.exports.config = {
   name: 'pause',
   aliases: ['pausecommand'],

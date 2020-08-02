@@ -1,16 +1,19 @@
 const pausedCommands = require('../databaseFiles/pausedCommands');
-
 module.exports.execute = async (client, message, args) => {
   if (message.member.hasPermission('ADMINISTRATOR')) {
     if (args[0]) {
       var command = args[0];
       pausedCommands.sync().then(() => {
-        pausedCommands.findAll(
-          { where: {name: command }}
-        ).then((result) => {
+        pausedCommands.findAll({
+          where: {
+            name: command
+          }
+        }).then((result) => {
           if (result.length > 0) {
             pausedCommands.destroy({
-              where: {name: command}
+              where: {
+                name: command
+              }
             }).then(() => {
               return message.channel.send('That command has been unpaused! It can now be used by anyone.');
             });
@@ -26,7 +29,6 @@ module.exports.execute = async (client, message, args) => {
     return message.channel.send(':x: You do not have permission unpause a command!');
   }
 };
-
 module.exports.config = {
   name: 'unpause',
   aliases: ['unpausecommand'],

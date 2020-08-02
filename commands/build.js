@@ -1,10 +1,8 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
-
 module.exports.execute = async (client, message) => {
   var team;
-
   if (message.channel.id === config.channels.teamOne) {
     team = "one";
   } else if (message.channel.id === config.channels.teamTwo) {
@@ -14,7 +12,6 @@ module.exports.execute = async (client, message) => {
   } else {
     return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
-
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
@@ -25,11 +22,9 @@ module.exports.execute = async (client, message) => {
         var coins = parseInt(result[0].coins);
         var walls = 4;
         var penalty = 2;
-
         if (result[0].class == "stonemason") {
           walls = 6;
         }
-
         if (coins >= penalty) {
           // To prevent spam abuse, these two are after the check
           var special = "";
@@ -40,11 +35,8 @@ module.exports.execute = async (client, message) => {
             penalty = 0;
             special = " because of your skills as a joker";
           }
-
           coins -= penalty;
-
           console.log(coins);
-
           pomTeams.sync().then(() => {
             pomTeams.findAll({
               where: {
@@ -52,16 +44,22 @@ module.exports.execute = async (client, message) => {
               },
             }).then((teamresult) => {
               if (teamresult[0].walls < walls) {
-                pomTeams.update(
-                  { walls: walls,
-                    build: teamresult[0].build + 1 },
-                  { where: { team: team } }
-                ).then(() => {
-                  pomMembers.update(
-                    { coins: coins,
-                      build: result[0].build + 1 },
-                    { where: { user: message.author.id } }
-                  ).then(() => {
+                pomTeams.update({
+                  walls: walls,
+                  build: teamresult[0].build + 1
+                }, {
+                  where: {
+                    team: team
+                  }
+                }).then(() => {
+                  pomMembers.update({
+                    coins: coins,
+                    build: result[0].build + 1
+                  }, {
+                    where: {
+                      user: message.author.id
+                    }
+                  }).then(() => {
                     if (walls == 7) walls = "6 (a bonus for being a stonemason)";
                     let plural = "coins";
                     if (penalty === 1) plural = "coin";
@@ -84,7 +82,6 @@ module.exports.execute = async (client, message) => {
     });
   });
 };
-
 module.exports.config = {
   name: 'build',
   aliases: ['b'],

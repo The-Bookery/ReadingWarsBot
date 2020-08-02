@@ -4,11 +4,9 @@ const pomTeams = require('../databaseFiles/pomTeams');
 
 function pluralFinder(requestedcoins) {
   let plural = "coins";
-  if (requestedcoins === 1)
-    plural = "coins";
+  if (requestedcoins === 1) plural = "coins";
   return plural;
 }
-
 module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[0] && parseInt(args[0])) {
@@ -21,9 +19,7 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
-
   var wordteam;
-
   if (message.channel.id === config.channels.teamOne) {
     wordteam = "one";
   } else if (message.channel.id === config.channels.teamTwo) {
@@ -33,8 +29,6 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
-
-
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
@@ -48,35 +42,40 @@ module.exports.execute = async (client, message, args) => {
           },
         }).then((teamresult) => {
           var bonus = 0;
-
           if (result[0].class == "thief") {
-            for(var i = 0; i < requestedcoins; ++i){
+            for (var i = 0; i < requestedcoins; ++i) {
               var random = Math.floor(Math.random() * 10);
               if (random == 9) bonus += 1;
             }
           }
-
           var newCoins = result[0].coins - requestedcoins + bonus;
           if (newCoins < 0) {
             return message.channel.send(`:x: Looks like you don't have that many coins! You currently have ${result[0].coins}.`);
           }
-
           var newPoints = result[0].points + (requestedcoins * 50);
           var joker = "";
-          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {newPoints = newPoints + requestedcoins * 50; joker = ", with a 50% bonus from your joker class";}
+          if (result[0].class == "joker" && Math.floor(Math.random() * 10) == 9) {
+            newPoints = newPoints + requestedcoins * 50;
+            joker = ", with a 50% bonus from your joker class";
+          }
           var newTeamPoints = teamresult[0].points + (requestedcoins * 50);
-
-          pomMembers.update(
-            { points: newPoints,
-              coins: newCoins,
-              tradein: result[0].tradein + 1 },
-            { where: { user: message.author.id } }
-          ).then(() => {
-            pomTeams.update(
-              { points: newTeamPoints,
-                tradein: teamresult[0].tradein + 1 },
-              { where: { team: wordteam } }
-            ).then(() => {
+          pomMembers.update({
+            points: newPoints,
+            coins: newCoins,
+            tradein: result[0].tradein + 1
+          }, {
+            where: {
+              user: message.author.id
+            }
+          }).then(() => {
+            pomTeams.update({
+              points: newTeamPoints,
+              tradein: teamresult[0].tradein + 1
+            }, {
+              where: {
+                team: wordteam
+              }
+            }).then(() => {
               let plural = pluralFinder(requestedcoins);
               let thief = "";
               if (bonus > 0) thief = `, stealing ${bonus} coins back,`;
@@ -88,7 +87,6 @@ module.exports.execute = async (client, message, args) => {
     });
   });
 };
-
 module.exports.config = {
   name: 'tradein',
   aliases: ['tradein'],

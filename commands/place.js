@@ -9,38 +9,28 @@ function addRole(message, member) {
     var teamrole;
     if (teamchoice == 1) {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamone);
-    }
-    else if (teamchoice == 2) {
+    } else if (teamchoice == 2) {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamtwo);
-    }
-    else {
+    } else {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamthree);
     }
     member.roles.add(teamrole);
-    message.channel
-      .send(
-        `${member.user.username} was put on team ${teamchoice} as a ${gclass}!`
-      );
+    message.channel.send(`${member.user.username} was put on team ${teamchoice} as a ${gclass}!`);
   } catch (err) {
     console.log(err);
   }
 }
-
 var teamchoice;
 var gclass;
-
 module.exports.execute = async (client, message, args) => {
   if (!args[0]) {
     return await message.channel.send("Please add a subcommand!");
   }
-
-  if(!parseInt(args[0])) {
+  if (!parseInt(args[0])) {
     return await message.channel.send('Looks like you didn\'t input a proper number.');
   }
-
   var member = message.guild.members.cache.get(args[0]);
   if (!member) return message.channel.send('Looks like your ID doesn\'t correspond to any member in this server!');
-
   if (message.member.hasPermission('ADMINISTRATOR')) {
     if (args[1]) {
       teamchoice = args[1].toLowerCase();
@@ -50,7 +40,6 @@ module.exports.execute = async (client, message, args) => {
     } else {
       return await message.channel.send('Please choose a valid class!');
     }
-
     if (args[2]) {
       gclass = args[2].toLowerCase();
       if (gclass !== "knight" && gclass !== "thief" && gclass !== "stonemason" && gclass !== "joker") {
@@ -59,7 +48,6 @@ module.exports.execute = async (client, message, args) => {
     } else {
       return await message.channel.send('Please choose a class!');
     }
-
     try {
       pomMembers.sync().then(() => {
         pomLeaves.sync().then(() => {
@@ -76,18 +64,14 @@ module.exports.execute = async (client, message, args) => {
                   },
                 }).then((result) => {
                   if (result.length == 0) {
-
                     // Do math to determine where to put user
                     if (teamchoice == 1) {
                       wordteam = "one";
-                    }
-                    else if (teamchoice == 2) {
+                    } else if (teamchoice == 2) {
                       wordteam = "two";
-                    }
-                    else {
+                    } else {
                       wordteam = "three";
                     }
-
                     pomMembers.create({
                       user: args[0],
                       team: teamchoice,
@@ -100,8 +84,7 @@ module.exports.execute = async (client, message, args) => {
                       attack: 0,
                       build: 0,
                       bomb: 0
-                    })
-                    .then(() => {
+                    }).then(() => {
                       pomTeams.sync().then(() => {
                         pomTeams.findAll({
                           where: {
@@ -109,38 +92,49 @@ module.exports.execute = async (client, message, args) => {
                           }
                         }).then((teamresult) => {
                           if (gclass == "knight") {
-                            pomTeams.update(
-                              { knights: teamresult[0].knights + 1 },
-                              { where: { team: wordteam } }
-                            ).then(() => {
+                            pomTeams.update({
+                              knights: teamresult[0].knights + 1
+                            }, {
+                              where: {
+                                team: wordteam
+                              }
+                            }).then(() => {
                               addRole(message, member);
                             });
                           } else if (gclass == "thief") {
-                            pomTeams.update(
-                              { thieves: teamresult[0].thieves + 1 },
-                              { where: { team: wordteam } }
-                            ).then(() => {
+                            pomTeams.update({
+                              thieves: teamresult[0].thieves + 1
+                            }, {
+                              where: {
+                                team: wordteam
+                              }
+                            }).then(() => {
                               addRole(message, member);
                             });
                           } else if (gclass == "stonemason") {
-                            pomTeams.update(
-                              { stonemasons: teamresult[0].stonemasons + 1 },
-                              { where: { team: wordteam } }
-                            ).then(() => {
+                            pomTeams.update({
+                              stonemasons: teamresult[0].stonemasons + 1
+                            }, {
+                              where: {
+                                team: wordteam
+                              }
+                            }).then(() => {
                               addRole(message, member);
                             });
                           } else if (gclass == "joker") {
-                            pomTeams.update(
-                              { jokers: teamresult[0].jokers + 1 },
-                              { where: { team: wordteam } }
-                            ).then(() => {
+                            pomTeams.update({
+                              jokers: teamresult[0].jokers + 1
+                            }, {
+                              where: {
+                                team: wordteam
+                              }
+                            }).then(() => {
                               addRole(message, member);
                             });
                           }
                         });
                       });
-                    })
-                    .catch((err) => {
+                    }).catch((err) => {
                       console.error('Team error: ', err);
                     });
                   } else {
@@ -155,15 +149,13 @@ module.exports.execute = async (client, message, args) => {
           });
         });
       });
-    }
-    catch(err) {
+    } catch (err) {
       return message.channel.send("There was an error adding that to the database! Are you sure you used commas around every value?");
     }
   } else {
     return await message.channel.send('You are lacking the admin priveledge to run this command.');
   }
 };
-
 module.exports.config = {
   name: 'place',
   aliases: ['place'],

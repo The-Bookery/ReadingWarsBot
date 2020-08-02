@@ -1,11 +1,10 @@
 const pausedCommands = require('../databaseFiles/pausedCommands');
-
 module.exports.execute = async (client, message) => {
   pausedCommands.sync().then(() => {
     pausedCommands.findAll().then((result) => {
       if (result.length > 0) {
         var paused;
-        for(var i = 0; i < result.length; ++i){
+        for (var i = 0; i < result.length; ++i) {
           if (i == 0) paused = '`b-' + result[0].name + '`';
           else paused = paused + ', `b-' + result[0].name + '`';
         }
@@ -16,7 +15,6 @@ module.exports.execute = async (client, message) => {
     });
   });
 };
-
 module.exports.config = {
   name: 'listpaused',
   aliases: ['lp'],
