@@ -135,46 +135,46 @@ module.exports.execute = async (client, message, args) => {
                   stolen = targetresult[0].points;
                 }
 
-                if (targetresult[0].walls == 0) {
-                  pomMembers.findAll({
-                    attributes: [
-                        "id", "user", "points", "team",
-                        [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
-                      ],
-                      raw: true,
-                  }).then((rankedresult) => {
-                    var i = 0;
-                    var toremove = stolen;
-                    if (toremove > targetresult[0].points) toremove = targetresult[0].points;
+                pomTeams.findAll({
+                  where: {
+                    team: wordteam
+                  }
+                }).then((teamresult) => {
+                  if (targetresult[0].walls == 0) {
+                    pomMembers.findAll({
+                      attributes: [
+                          "id", "user", "points", "team",
+                          [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']
+                        ],
+                        raw: true,
+                    }).then((rankedresult) => {
+                      var i = 0;
+                      var toremove = stolen;
+                      if (toremove > targetresult[0].points) toremove = targetresult[0].points;
 
-                    while (toremove > 0) {
-                      if (rankedresult[i]) {
-                        if (rankedresult[i].team == target) {
-                          if (rankedresult[i].points >= stolen) {
-                            pomMembers.update(
-                              { points: rankedresult[i].points - stolen },
-                              { where: { user: rankedresult[i].user } }
-                            );
-                            toremove = 0;
-                          } else {
-                            toremove -= rankedresult[i].points;
-                            pomMembers.update(
-                              { points: 0 },
-                              { where: { user: rankedresult[i].user } }
-                            );
+                      while (toremove > 0) {
+                        if (rankedresult[i]) {
+                          if (rankedresult[i].team == target) {
+                            if (rankedresult[i].points >= stolen) {
+                              pomMembers.update(
+                                { points: rankedresult[i].points - stolen },
+                                { where: { user: rankedresult[i].user } }
+                              );
+                              toremove = 0;
+                            } else {
+                              toremove -= rankedresult[i].points;
+                              pomMembers.update(
+                                { points: 0 },
+                                { where: { user: rankedresult[i].user } }
+                              );
+                            }
                           }
+                          i += 1;
+                        } else {
+                          break;
                         }
-                        i += 1;
-                      } else {
-                        break;
                       }
-                    }
-                    if (targetresult[0].points > 0) {
-                      pomTeams.findAll({
-                        where: {
-                          team: wordteam
-                        }
-                      }).then((teamresult) => {
+                      if (targetresult[0].points > 0) {
                         var timediff;
                         if (wordtarget == "one") {
                           timediff = timedifference(teamresult[0].teamone, Date.now());
@@ -226,38 +226,36 @@ module.exports.execute = async (client, message, args) => {
                         /*} else {
                           return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
                         }*/
-                      }).catch((err) => {
+                      } else {
+                        return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
+                      }
+                    });
+                  } else {
+                    pomTeams.update(
+                      { walls: targetresult[0].walls - 1 },
+                      { where: { team: wordtarget } }
+                    ).then(() => {
+                      pomTeams.update(
+                        { coins: result[0].coins - 1 },
+                        { where: { user: message.author.id }}
+                      ).then(() => {
+                        return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`)
+                        .then(() => {
+                          var verb = `damaged, and they now have a durability of ${targetresult[0].walls - 1}`;
+                          if (targetresult[0].walls - 1 == 0) verb = "destroyed";
+                          targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
+                        });
+                      })
+                      .catch((err) => {
                         console.error("Error! ", err);
                       });
-                    } else {
-                      return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
-                    }
-                  });
-                } else {
-                  pomTeams.update(
-                    { walls: targetresult[0].walls - 1 },
-                    { where: { team: wordtarget } }
-                  ).then(() => {
-                    pomTeams.update(
-                      { coins: result[0].coins - 1 },
-                      { where: { user: message.author.id }}
-                    ).then(() => {
-                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`).then(() => {
-                        var verb = `damaged, and they now have a durability of ${teamresult[0].team}`;
-                        if (targetresult[0].walls - 1) verb = "destroyed";
-                        targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
-                      });
-                    })
-                    .then(() => {
-                      targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked their attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
-                    })
-                    .catch((err) => {
+                    }).catch((err) => {
                       console.error("Error! ", err);
                     });
-                  }).catch((err) => {
-                    console.error("Error! ", err);
-                  });
-                }
+                  }
+                }).catch((err) => {
+                  console.error("Error! ", err);
+                });
               });
             } else {
               pomMembers.update(

@@ -27,8 +27,7 @@ module.exports.execute = async (client, message) => {
         var penalty = 2;
 
         if (result[0].class == "stonemason") {
-          penalty = 1;
-          walls = 7;
+          walls = 6;
         }
 
         if (coins >= penalty) {
@@ -63,7 +62,7 @@ module.exports.execute = async (client, message) => {
                       build: result[0].build + 1 },
                     { where: { user: message.author.id } }
                   ).then(() => {
-                    if (walls == 7) walls = "7 (a bonus for being a stonemason)";
+                    if (walls == 7) walls = "6 (a bonus for being a stonemason)";
                     let plural = "coins";
                     if (penalty === 1) plural = "coin";
                     return message.channel.send(`:european_castle: You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);

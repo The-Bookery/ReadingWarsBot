@@ -76,9 +76,9 @@ module.exports.execute = async (client, message, args) => {
                 }).then((targetresult) => {
                   if (targetresult[0].walls > 0) {
                     var addition = "";
-                    var newWalls = targetresult[0].walls - 3;
+                    var newWalls = targetresult[0].walls - 2;
+                    if (result[0].class == "joker" && Math.floor(Math.random() * 10) + 1 > 9) {newWalls = targetresult[0].walls - 3; addition = " with a +1 damage bonus from your joker class.";}
                     if (newWalls < 0) newWalls = 0;
-                    if (result[0].class == "joker" && Math.floor(Math.random() * 10) > 9 && targetresult[0].walls == 4) {newWalls = targetresult[0].walls - 4; addition = " with a +1 damage bonus from your joker class.";}
 
                     var verb;
                     if (newWalls > 0) verb = "damaged";
