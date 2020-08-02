@@ -58,6 +58,25 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Not the correct channel! Please go to your team channel.');
   }
+
+  var wordteam;
+  if (team == 1) {
+    wordteam = "one";
+  } else if (team == 2) {
+    wordteam = "two";
+  } else {
+    wordteam = "three";
+  }
+  var target = args[0];
+  var wordtarget;
+  if (target == 1) {
+    wordtarget = "one";
+  } else if (target == 2) {
+    wordtarget = "two";
+  } else {
+    wordtarget = "three";
+  }
+  
   if (args[0] != 1 && args[0] != 2 && args[0] != 3) {
     return await message.channel.send('Looks like you didn\'t target a team!');
   }
@@ -72,7 +91,7 @@ module.exports.execute = async (client, message, args) => {
     // Random between 5 and 10
     percent = Math.floor(Math.random() * 6) + 5;
   }
-  var target = args[0];
+  console.log(target);
   if (target == team) {
     return await message.channel.send('You can\'t target your own team!');
   }
@@ -89,43 +108,27 @@ module.exports.execute = async (client, message, args) => {
       }).then((result) => {
         pomTeams.findAll({
           where: {
-            team: wordtarget,
-          },
-        }).then((targetresult) => {
+            team: wordteam
+          }
+        }).then((teamresult) => {
+          var timediff;
+          if (wordtarget == "one") {
+            timediff = timedifference(teamresult[0].teamone, Date.now());
+          } else if (wordtarget == "two") {
+            timediff = timedifference(teamresult[0].teamtwo, Date.now());
+          } else {
+            timediff = timedifference(teamresult[0].teamthree, Date.now());
+          }
           pomTeams.findAll({
             where: {
-              team: wordteam
-            }
-          }).then((teamresult) => {
+              team: wordtarget,
+            },
+          }).then((targetresult) => {
             if (result.length == 1) {
-              var timediff;
-              if (wordtarget == "one") {
-                timediff = timedifference(teamresult[0].teamone, Date.now());
-              } else if (wordtarget == "two") {
-                timediff = timedifference(teamresult[0].teamtwo, Date.now());
-              } else {
-                timediff = timedifference(teamresult[0].teamthree, Date.now());
-              }
               var coins = parseInt(result[0].coins);
               if (coins > 0) {
                 if (timediff >= 30) {
                   coins -= 1;
-                  var wordteam;
-                  if (team == 1) {
-                    wordteam = "one";
-                  } else if (team == 2) {
-                    wordteam = "two";
-                  } else {
-                    wordteam = "three";
-                  }
-                  var wordtarget;
-                  if (target == 1) {
-                    wordtarget = "one";
-                  } else if (target == 2) {
-                    wordtarget = "two";
-                  } else {
-                    wordtarget = "three";
-                  }
                   var random;
                   var penalty = 1;
                   if (result[0].class == "knight") random = 100 - (3 * percent);
@@ -134,9 +137,14 @@ module.exports.execute = async (client, message, args) => {
                   if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
                   var generatedRandom = Math.floor(Math.random() * 100);
                   if (generatedRandom < random) {
+                    console.log("Perceeirnt: " + percent);
                     var stolen = Math.ceil(targetresult[0].points * (0.01 * percent));
+                    console.log("Stoeleen: " + stolen);
                     if (stolen <= 300) {
-                      stolen = targetresult[0].points;
+                      stolen = 300;
+                      if (targetresult[0].points <= 300) {
+                        stolen = targetresult[0].points;
+                      }
                     }
                     if (targetresult[0].walls == 0) {
                       pomMembers.findAll({
