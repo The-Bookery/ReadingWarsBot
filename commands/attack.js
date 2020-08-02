@@ -233,7 +233,11 @@ module.exports.execute = async (client, message, args) => {
                       { coins: result[0].coins - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
-                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
+                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`).then(() => {
+                        var verb = `damaged, and they now have a durability of ${teamresult[0].team}`;
+                        if (targetresult[0].walls - 1) verb = "destroyed";
+                        targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
+                      });
                     })
                     .then(() => {
                       targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked their attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
