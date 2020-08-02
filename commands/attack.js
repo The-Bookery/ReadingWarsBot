@@ -2,7 +2,6 @@ const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 const Sequelize = require('sequelize');
-
 // call function with variables timestamp1 and timestamp2 in call
 function timedifference(timestamp1, timestamp2) {
   // redefine the variables
@@ -70,7 +69,8 @@ module.exports.execute = async (client, message, args) => {
       return await message.channel.send('You cannot try and take more than 10% of a team\'s points!');
     }
   } else {
-    percent = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
+    // Random between 5 and 10
+    percent = Math.floor(Math.random() * 6) + 5;
   }
   var target = args[0];
   if (target == team) {
@@ -98,83 +98,83 @@ module.exports.execute = async (client, message, args) => {
             }
           }).then((teamresult) => {
             if (result.length == 1) {
+              var timediff;
+              if (wordtarget == "one") {
+                timediff = timedifference(teamresult[0].teamone, Date.now());
+              } else if (wordtarget == "two") {
+                timediff = timedifference(teamresult[0].teamtwo, Date.now());
+              } else {
+                timediff = timedifference(teamresult[0].teamthree, Date.now());
+              }
               var coins = parseInt(result[0].coins);
               if (coins > 0) {
-                coins -= 1;
-                var wordteam;
-                if (team == 1) {
-                  wordteam = "one";
-                } else if (team == 2) {
-                  wordteam = "two";
-                } else {
-                  wordteam = "three";
-                }
-                var wordtarget;
-                if (target == 1) {
-                  wordtarget = "one";
-                } else if (target == 2) {
-                  wordtarget = "two";
-                } else {
-                  wordtarget = "three";
-                }
-                var random;
-                var penalty = 1;
-                if (result[0].class == "knight") random = 100 - (3 * percent);
-                else if (result[0].class == "joker") random = 100 - (3.25 * percent);
-                else random = 100 - (3.5 * percent);
-                if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
-                var generatedRandom = Math.floor(Math.random() * 100);
-                if (generatedRandom < random) {
-                  var stolen = Math.ceil(targetresult[0].points - targetresult[0].points * (0.01 * random));
-                  if (stolen <= 300) {
-                    stolen = targetresult[0].points;
+                if (timediff >= 30) {
+                  coins -= 1;
+                  var wordteam;
+                  if (team == 1) {
+                    wordteam = "one";
+                  } else if (team == 2) {
+                    wordteam = "two";
+                  } else {
+                    wordteam = "three";
                   }
-                  if (targetresult[0].walls == 0) {
-                    pomMembers.findAll({
-                      attributes: ["id", "user", "points", "team", [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']],
-                      raw: true,
-                    }).then((rankedresult) => {
-                      var i = 0;
-                      var toremove = stolen;
-                      if (toremove > targetresult[0].points) toremove = targetresult[0].points;
-                      while (toremove > 0) {
-                        if (rankedresult[i]) {
-                          if (rankedresult[i].team == target) {
-                            if (rankedresult[i].points >= stolen) {
-                              pomMembers.update({
-                                points: rankedresult[i].points - stolen
-                              }, {
-                                where: {
-                                  user: rankedresult[i].user
-                                }
-                              });
-                              toremove = 0;
-                            } else {
-                              toremove -= rankedresult[i].points;
-                              pomMembers.update({
-                                points: 0
-                              }, {
-                                where: {
-                                  user: rankedresult[i].user
-                                }
-                              });
+                  var wordtarget;
+                  if (target == 1) {
+                    wordtarget = "one";
+                  } else if (target == 2) {
+                    wordtarget = "two";
+                  } else {
+                    wordtarget = "three";
+                  }
+                  var random;
+                  var penalty = 1;
+                  if (result[0].class == "knight") random = 100 - (3 * percent);
+                  else if (result[0].class == "joker") random = 100 - (3.25 * percent);
+                  else random = 100 - (3.5 * percent);
+                  if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
+                  var generatedRandom = Math.floor(Math.random() * 100);
+                  if (generatedRandom < random) {
+                    var stolen = Math.ceil(targetresult[0].points * (0.01 * percent));
+                    if (stolen <= 300) {
+                      stolen = targetresult[0].points;
+                    }
+                    if (targetresult[0].walls == 0) {
+                      pomMembers.findAll({
+                        attributes: ["id", "user", "points", "team", [Sequelize.literal('RANK () OVER ( ORDER BY points DESC )'), 'rank']],
+                        raw: true,
+                      }).then((rankedresult) => {
+                        var i = 0;
+                        var toremove = stolen;
+                        if (toremove > targetresult[0].points) toremove = targetresult[0].points;
+                        while (toremove > 0) {
+                          if (rankedresult[i]) {
+                            if (rankedresult[i].team == target) {
+                              if (rankedresult[i].points >= stolen) {
+                                pomMembers.update({
+                                  points: rankedresult[i].points - stolen
+                                }, {
+                                  where: {
+                                    user: rankedresult[i].user
+                                  }
+                                });
+                                toremove = 0;
+                              } else {
+                                toremove -= rankedresult[i].points;
+                                pomMembers.update({
+                                  points: 0
+                                }, {
+                                  where: {
+                                    user: rankedresult[i].user
+                                  }
+                                });
+                              }
                             }
+                            i += 1;
+                          } else {
+                            break;
                           }
-                          i += 1;
-                        } else {
-                          break;
                         }
-                      }
-                      if (targetresult[0].points > 0) {
-                        var timediff;
-                        if (wordtarget == "one") {
-                          timediff = timedifference(teamresult[0].teamone, Date.now());
-                        } else if (wordtarget == "two") {
-                          timediff = timedifference(teamresult[0].teamtwo, Date.now());
-                        } else {
-                          timediff = timedifference(teamresult[0].teamthree, Date.now());
-                        }
-                        if (timediff >= 30) {
+                        if (targetresult[0].points > 0) {
                           var newPoints = targetresult[0].points - stolen;
                           if (newPoints < 0) newPoints = 0;
                           var givenPoints = targetresult[0].points - newPoints;
@@ -222,49 +222,49 @@ module.exports.execute = async (client, message, args) => {
                             console.error("Error! ", err);
                           });
                         } else {
-                          return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
+                          return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
                         }
-                      } else {
-                        return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
-                      }
-                    });
-                  } else {
-                    pomTeams.update({
-                      walls: targetresult[0].walls - 1
-                    }, {
-                      where: {
-                        team: wordtarget
-                      }
-                    }).then(() => {
+                      });
+                    } else {
                       pomTeams.update({
-                        coins: result[0].coins - 1
+                        walls: targetresult[0].walls - 1
                       }, {
                         where: {
-                          user: message.author.id
+                          team: wordtarget
                         }
                       }).then(() => {
-                        return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`).then(() => {
-                          var verb = `damaged, and they now have a durability of ${targetresult[0].walls - 1}`;
-                          if (targetresult[0].walls - 1 == 0) verb = "destroyed";
-                          targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
+                        pomTeams.update({
+                          coins: result[0].coins - 1
+                        }, {
+                          where: {
+                            user: message.author.id
+                          }
+                        }).then(() => {
+                          return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`).then(() => {
+                            var verb = `damaged, and they now have a durability of ${targetresult[0].walls - 1}`;
+                            if (targetresult[0].walls - 1 == 0) verb = "destroyed";
+                            targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
+                          });
+                        }).catch((err) => {
+                          console.error("Error! ", err);
                         });
                       }).catch((err) => {
                         console.error("Error! ", err);
                       });
-                    }).catch((err) => {
-                      console.error("Error! ", err);
+                    }
+                  } else {
+                    pomMembers.update({
+                      coins: result[0].coins - 1
+                    }, {
+                      where: {
+                        user: message.author.id
+                      }
+                    }).then(() => {
+                      return message.channel.send(`:x: Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
                     });
                   }
                 } else {
-                  pomMembers.update({
-                    coins: result[0].coins - 1
-                  }, {
-                    where: {
-                      user: message.author.id
-                    }
-                  }).then(() => {
-                    return message.channel.send(`:x: Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
-                  });
+                  return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
                 }
               } else {
                 return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
@@ -284,7 +284,6 @@ module.exports.execute = async (client, message, args) => {
     });
   });
 };
-
 module.exports.config = {
   name: 'attackteam',
   aliases: ['attack'],
