@@ -13,10 +13,21 @@ module.exports = async (client, message) => {
     args.shift().slice(prefix.length);
 
   if (command) {
+    let commands = client.commands;
+    var maincommand;
+
+    commands.forEach((requestedcommand) => {
+      if (requestedcommand.config.name === command) {
+        maincommand = requestedcommand.config.name;
+      } else if (requestedcommand.config.aliases.includes(command)) {
+        maincommand = requestedcommand.config.name;
+      }
+    });
+
     pausedCommands.sync().then(() => {
       pausedCommands.findAll(
         {
-          where: { name: command }
+          where: { name: maincommand }
         }
       ).then((result) => {
         const adminPriv = message.member.hasPermission('ADMINISTRATOR');
