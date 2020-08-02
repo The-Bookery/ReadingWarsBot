@@ -8,10 +8,10 @@ module.exports.execute = async (client, message) => {
   if (message.member.hasPermission('ADMINISTRATOR')) {
     message.channel.send('**Warning!** THIS VERY OBVIOUSLY MESSES EVERYTHING UP! Do you want to proceed? (yes/no)').then((warningmessage) => {
       const filter = m => m.author.id === message.author.id
-      && m.content.includes('yes')
+      && (m.content.includes('yes')
       || m.content.includes('no')
       || m.content.includes('y')
-      || m.content.includes('n');
+      || m.content.includes('n'));
       const collector = warningmessage.channel.createMessageCollector(filter, { time: 15000 });
 
       collector.on('collect', m => {
@@ -54,6 +54,9 @@ module.exports.execute = async (client, message) => {
               });
             });
           });
+        } else if (m.content.includes('no') || m.content.includes('n')) {
+          message.channel.send('Database has **not** been reset!');
+          collector.stop();
         }
       });
     });

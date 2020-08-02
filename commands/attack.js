@@ -16,10 +16,6 @@ function timedifference(timestamp1, timestamp2) {
   return difference;
 }
 
-function randomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function updateCooldown(wordtarget, wordteam) {
   if (wordtarget == "one") {
     pomTeams.update(
@@ -48,6 +44,7 @@ function updateCooldown(wordtarget, wordteam) {
 
 module.exports.execute = async (client, message, args) => {
   var team;
+  var percent = Math.floor(Math.random() * (10 - 5 + 1) ) + 5;
 
   if (message.channel.id === config.channels.teamOne) {
     team = 1;
@@ -61,6 +58,14 @@ module.exports.execute = async (client, message, args) => {
 
   if (args[0] != 1 && args[0] != 2 && args[0] != 3) {
     return await message.channel.send('Looks like you didn\'t target a team!');
+  }
+
+  if (parseInt(args[1])) {
+    if (args[1] <= 10) {
+      percent = args[1];
+    } else {
+      return await message.channel.send('You cannot try and take more than 10% of a team\'s points!');
+    }
   }
 
   var target = args[0];
@@ -107,22 +112,29 @@ module.exports.execute = async (client, message, args) => {
               wordtarget = "three";
             }
 
-            var random = 26;
+            var random;
             var penalty = 1;
 
-            if (result[0].class == "knight") random = 16;
-            else if (result[0].class == "joker") random = 21;
-            else if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
+            if (result[0].class == "knight") random = 100 - (3 * percent);
+            else if (result[0].class == "joker") random = 100 - (3.25 * percent);
+            else random = 100 - (3.5 * percent);
 
-            var stolen = randomInteger(500, 750);
+            if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
+
+            console.log(random);
             var generatedRandom = Math.floor(Math.random() * 100);
 
-            if (generatedRandom > random) {
+            if (generatedRandom < random) {
               pomTeams.findAll({
                 where: {
                   team: wordtarget,
                 },
               }).then((targetresult) => {
+                var stolen = Math.ceil(targetresult[0].points - targetresult[0].points * (0.01 * random));
+                if (stolen <= 300) {
+                  stolen = targetresult[0].points;
+                }
+
                 if (targetresult[0].walls == 0) {
                   pomMembers.findAll({
                     attributes: [
@@ -168,14 +180,11 @@ module.exports.execute = async (client, message, args) => {
                           timediff = timedifference(teamresult[0].teamone, Date.now());
                         } else if (wordtarget == "two") {
                           timediff = timedifference(teamresult[0].teamtwo, Date.now());
-                          console.log(teamresult[0].teamtwo);
                         } else {
                           timediff = timedifference(teamresult[0].teamthree, Date.now());
                         }
 
-                        console.log(timediff);
-
-                        if (timediff >= 30) {
+                        //if (timediff >= 30) {
                           var newPoints = targetresult[0].points - stolen;
                           if (newPoints < 0) newPoints = 0;
                           var givenPoints = targetresult[0].points - newPoints;
@@ -214,9 +223,9 @@ module.exports.execute = async (client, message, args) => {
                             }).catch((err) => {
                               console.error("Error! ", err);
                             });
-                        } else {
+                        /*} else {
                           return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
-                        }
+                        }*/
                       }).catch((err) => {
                         console.error("Error! ", err);
                       });
@@ -274,8 +283,8 @@ module.exports.execute = async (client, message, args) => {
 };
 
 module.exports.config = {
-  name: 'attack',
+  name: 'attackteam',
   aliases: ['attack'],
-  description: 'Breaks down three walls at a time.',
-  usage: ['bomb [team number]'],
+  description: 'Attacks a team if their walls are down. An optional percent can be added to increase the percentage of points you earn from a successful attack, although the higher this number the lower the chance.',
+  usage: ['attackteam <team number> [percent]'],
 };
