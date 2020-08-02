@@ -61,9 +61,10 @@ module.exports.execute = async (client, message, args) => {
   }
 
   if (parseInt(args[1])) {
-    if (args[1] <= 10) {
-      percent = args[1];
-    } else {
+    percent = Math.floor(parseInt(args[1]));
+    if (percent < 5) {
+      return await message.channel.send('You cannot try and take less than 5% of a team\'s points!');
+    } else if (percent > 10) {
       return await message.channel.send('You cannot try and take more than 10% of a team\'s points!');
     }
   }
@@ -184,7 +185,7 @@ module.exports.execute = async (client, message, args) => {
                           timediff = timedifference(teamresult[0].teamthree, Date.now());
                         }
 
-                        //if (timediff >= 30) {
+                        if (timediff >= 30) {
                           var newPoints = targetresult[0].points - stolen;
                           if (newPoints < 0) newPoints = 0;
                           var givenPoints = targetresult[0].points - newPoints;
@@ -223,9 +224,9 @@ module.exports.execute = async (client, message, args) => {
                             }).catch((err) => {
                               console.error("Error! ", err);
                             });
-                        /*} else {
+                        } else {
                           return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
-                        }*/
+                        }
                       } else {
                         return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
                       }
