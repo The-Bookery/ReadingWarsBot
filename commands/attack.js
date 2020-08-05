@@ -75,38 +75,46 @@ module.exports.execute = async (client, message, args) => {
   else targetchannel = message.guild.channels.cache.find(channel => channel.id === config.channels.teamThree);
 
   pomMembers.sync().then(() => {
+    pomTeams.sync().then(() => {
     pomMembers.findAll({
       where: {
         user: message.author.id,
       },
     }).then((result) => {
+      var wordtarget;
+
+      if (target == 1) {
+        wordtarget = "one";
+      } else if (target == 2) {
+        wordtarget = "two";
+      } else {
+        wordtarget = "three";
+      }
+      pomTeams.findAll({
+        where: {
+          team: wordtarget,
+        },
+      }).then((targetresult) => {
+        
+        var wordteam;
+
+        if (team == 1) {
+          wordteam = "one";
+        } else if (team == 2) {
+          wordteam = "two";
+        } else {
+          wordteam = "three";
+        }
+        pomTeams.findAll({
+          where: {
+            team: wordteam
+          }
+        }).then((teamresult) => {
       if (result.length == 1) {
         var coins = parseInt(result[0].coins);
 
         if (coins > 0) {
           coins -= 1;
-
-          pomTeams.sync().then(() => {
-            var wordteam;
-
-            if (team == 1) {
-              wordteam = "one";
-            } else if (team == 2) {
-              wordteam = "two";
-            } else {
-              wordteam = "three";
-            }
-
-            var wordtarget;
-
-            if (target == 1) {
-              wordtarget = "one";
-            } else if (target == 2) {
-              wordtarget = "two";
-            } else {
-              wordtarget = "three";
-            }
-
             var random = 26;
             var penalty = 1;
 
@@ -118,11 +126,6 @@ module.exports.execute = async (client, message, args) => {
             var generatedRandom = Math.floor(Math.random() * 100) + 1;
 
             if (generatedRandom > random) {
-              pomTeams.findAll({
-                where: {
-                  team: wordtarget,
-                },
-              }).then((targetresult) => {
                 if (targetresult[0].walls == 0) {
                   pomMembers.findAll({
                     attributes: [
@@ -158,11 +161,6 @@ module.exports.execute = async (client, message, args) => {
                       }
                     }
                     if (targetresult[0].points > 0) {
-                      pomTeams.findAll({
-                        where: {
-                          team: wordteam
-                        }
-                      }).then((teamresult) => {
                         var timediff;
                         if (wordtarget == "one") {
                           timediff = timedifference(teamresult[0].teamone, Date.now());
@@ -217,9 +215,6 @@ module.exports.execute = async (client, message, args) => {
                         } else {
                           return message.channel.send(`:x: Looks like your team has attacked this team in the last 30 minutes! Wait another ${30 - timediff} minutes to let your troops rest!`);
                         }
-                      }).catch((err) => {
-                        console.error("Error! ", err);
-                      });
                     } else {
                       return message.channel.send('Looks like this team has no points for you to take! You have kept your coin.');
                     }
@@ -233,14 +228,12 @@ module.exports.execute = async (client, message, args) => {
                       { coins: result[0].coins - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
-                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls sustained one damage, and are now at a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`).then(() => {
-                        var verb = `damaged, and they now have a durability of ${teamresult[0].team}`;
-                        if (targetresult[0].walls - 1) verb = "destroyed";
-                        targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked it, but were ${verb}. <@&${config.roles.pingrole}>`);
-                      });
+                      var verb = `damaged`;
+                      if (targetresult[0].walls - 1 == 0) verb = "destroyed";
+                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls were ${verb}, and now have a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
                     })
                     .then(() => {
-                      targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked their attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
+                      targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked the attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
                     })
                     .catch((err) => {
                       console.error("Error! ", err);
@@ -249,7 +242,6 @@ module.exports.execute = async (client, message, args) => {
                     console.error("Error! ", err);
                   });
                 }
-              });
             } else {
               pomMembers.update(
                 { coins: result[0].coins - 1 },
@@ -258,18 +250,22 @@ module.exports.execute = async (client, message, args) => {
                 return message.channel.send(`:x: Your attack failed. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
               });
             }
-          }).catch((err) => {
-            console.error("Error! ", err);
-          });
         } else {
           return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
         return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');
       }
+    }).catch((err) => { // teamresult
+      console.error("Error! ", err);
+    });
+    }); // Targetresult
     }).catch((err) => {
       console.error("Error! ", err);
     });
+  }).catch((err) => { // Sync
+    console.error("Error! ", err);
+  });
   });
 };
 

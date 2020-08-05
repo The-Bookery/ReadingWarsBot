@@ -4,6 +4,16 @@ const pomBans = require('../databaseFiles/pomBans');
 const pomTeams = require('../databaseFiles/pomTeams');
 const pomLeaves = require('../databaseFiles/pomLeaves');
 
+// call function with variables timestamp1 and timestamp2 in call
+function timesubtract(timestamp1) {
+  // redefine the variables
+  difference = new Date(parseInt(timestamp1));
+
+  difference -= 1000 * 60 * 60 * 24;
+
+  return difference;
+}
+
 function addRole(message, member) {
   try {
     var teamrole;
@@ -78,7 +88,7 @@ module.exports.execute = async (client, message, args) => {
                       coins: 0,
                       points: 0,
                       class: gclass,
-                      classchange: Date.now(),
+                      classchange: timesubtract(Date.now()),
                       read: 0,
                       tradein: 0,
                       attack: 0,
