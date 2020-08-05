@@ -119,7 +119,11 @@ module.exports.execute = async (client, message, args) => {
                         }, ).then(() => {
                           let plural = "coins";
                           if (penalty === 1) plural = "coin";
-                          targetchannel.send(`:bomb: You have been bombed by team ${teamresult[0].team}! Your walls are now at ${newWalls}. <@&${config.roles.pingrole}>`);
+                          if (damage > 0) {
+                            targetchannel.send(`:bomb: You have been bombed by team ${teamresult[0].team}! Your walls are now at ${newWalls}. <@&${config.roles.pingrole}>`);
+                          } else {
+                            targetchannel.send(`:bomb: Team ${teamresult[0].team} attempted to bomb you, but it was a dud! It did no damage to your walls. <@&${config.roles.pingrole}>`);
+                          }
                           return message.channel.send(`:bomb: You have ${verb} team ${target}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
                         });
                       }).catch((error) => {

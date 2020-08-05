@@ -1,4 +1,3 @@
-const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 
 function pluralFinder(requestedcoins) {
@@ -86,7 +85,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'transfer',
-  aliases: ['tradein'],
-  description: 'Trade in coins at a rate of 100 points per coin!',
-  usage: ['tradein [coins (leave blank for 1)]'],
+  aliases: ['send'],
+  description: 'Send a user your coins!',
+  usage: ['transfer <user> [coins]'],
 };
