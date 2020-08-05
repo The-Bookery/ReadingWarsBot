@@ -20,7 +20,7 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
-  
+
   var wordteam;
 
   if (message.channel.id === config.channels.teamOne) {
