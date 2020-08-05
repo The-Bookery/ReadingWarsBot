@@ -115,7 +115,7 @@ module.exports.execute = async (client, message, args) => {
             else if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
 
             var stolen = randomInteger(500, 800);
-            var generatedRandom = Math.floor(Math.random() * 100);
+            var generatedRandom = Math.floor(Math.random() * 100) + 1;
 
             if (generatedRandom > random) {
               pomTeams.findAll({

@@ -1,6 +1,17 @@
 const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
+
+// call function with variables timestamp1 and timestamp2 in call
+function timedifference(timestamp1, timestamp2) {
+  // redefine the variables
+  timestamp1 = new Date(parseInt(timestamp1));
+  timestamp2 = new Date(parseInt(timestamp2));
+  let difference = timestamp2.getTime() - timestamp1.getTime();
+  difference = Math.floor(difference / 1000);
+  return difference;
+}
+
 module.exports.execute = async (client, message) => {
   var team;
   if (message.channel.id === config.channels.teamOne) {
@@ -43,33 +54,38 @@ module.exports.execute = async (client, message) => {
                 team: team,
               },
             }).then((teamresult) => {
-              if (teamresult[0].walls < walls) {
-                pomTeams.update({
-                  walls: walls,
-                  build: teamresult[0].build + 1
-                }, {
-                  where: {
-                    team: team
-                  }
-                }).then(() => {
-                  pomMembers.update({
-                    coins: coins,
-                    build: result[0].build + 1
+              if (timedifference(teamresult[0].wallcooldown, Date.now()) >= 120) {
+                if (teamresult[0].walls < walls) {
+                  pomTeams.update({
+                    walls: walls,
+                    build: teamresult[0].build + 1,
+                    wallcooldown: Date.now()
                   }, {
                     where: {
-                      user: message.author.id
+                      team: team
                     }
                   }).then(() => {
-                    if (walls == 7) walls = "6 (a bonus for being a stonemason)";
-                    let plural = "coins";
-                    if (penalty === 1) plural = "coin";
-                    return message.channel.send(`:european_castle: You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);
-                  }).catch((error) => {
-                    console.log('Update error: ' + error);
+                    pomMembers.update({
+                      coins: coins,
+                      build: result[0].build + 1
+                    }, {
+                      where: {
+                        user: message.author.id
+                      }
+                    }).then(() => {
+                      if (walls == 7) walls = "6 (a bonus for being a stonemason)";
+                      let plural = "coins";
+                      if (penalty === 1) plural = "coin";
+                      return message.channel.send(`:european_castle: You have restored your team's walls to ${walls} from ${teamresult[0].walls}! You lost ${penalty} ${plural} in the process${special}, and now have ${coins}.`);
+                    }).catch((error) => {
+                      console.log('Update error: ' + error);
+                    });
                   });
-                });
+                } else {
+                  return message.channel.send('Looks like you can\'t build the walls up any more! You have been saved your coin.');
+                }
               } else {
-                return message.channel.send('Looks like you can\'t build the walls up any more! You have been saved your coin.');
+                return message.channel.send(`:x: Your team built a wall in the past minute! Please wait ${120 - timedifference(teamresult[0].wallcooldown, Date.now())} more seconds!`);
               }
             });
           });

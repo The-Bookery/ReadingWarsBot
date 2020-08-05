@@ -9,7 +9,7 @@ module.exports = async (client, message) => {
   }
   const args = message.content.split(/\s+/g); // Return the message content and split the prefix.
   const command =
-    message.content.startsWith(prefix) &&
+    message.content.toLowerCase().startsWith(prefix) &&
     args.shift().slice(prefix.length);
 
   if (command) {

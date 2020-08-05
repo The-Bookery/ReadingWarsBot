@@ -21,6 +21,14 @@ module.exports = sequelize.define('PStats', {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
+  wallcooldown: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  bombcooldown: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   // The following are stats
   stonemasons: {
     type: Sequelize.INTEGER,
