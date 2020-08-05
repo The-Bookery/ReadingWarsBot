@@ -22,7 +22,7 @@ module.exports.execute = async (client, message, args) => {
     var page;
     if (args[1] && parseInt(args[1])) {
       page = Math.floor(parseInt(args[1]));
-      if (requestedcoins < 1) {
+      if (page < 1) {
         return await message.channel.send('You must have a number greater than 0!');
       }
     } else if (!args[1]) {
@@ -48,6 +48,8 @@ module.exports.execute = async (client, message, args) => {
 
       var lines = 10;
       if (result.length < 10) lines = result.length;
+
+      if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
 
       for (var i = page * 10; i < (page * 10) + lines; ++i) {
         if (result[i].user) {
