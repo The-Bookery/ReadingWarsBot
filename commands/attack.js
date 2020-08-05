@@ -120,7 +120,7 @@ module.exports.execute = async (client, message, args) => {
 
             if (result[0].class == "knight") random = 16;
             else if (result[0].class == "joker") random = 21;
-            else if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
+            else if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
 
             var stolen = randomInteger(500, 800);
             var generatedRandom = Math.floor(Math.random() * 100) + 1;

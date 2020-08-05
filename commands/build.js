@@ -39,10 +39,10 @@ module.exports.execute = async (client, message) => {
         if (coins >= penalty) {
           // To prevent spam abuse, these two are after the check
           var special = "";
-          if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) {
+          if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) {
             penalty = 0;
             special = " because of your skills as a thief";
-          } else if (result[0].class == "joker" && Math.floor(Math.random() * 9) > 4) {
+          } else if (result[0].class == "joker" && Math.floor(Math.random() * 9) + 1 > 5) {
             penalty = 0;
             special = " because of your skills as a joker";
           }

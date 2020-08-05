@@ -57,7 +57,7 @@ module.exports.execute = async (client, message, args) => {
     }).then((result) => {
       if (result.length == 1) {
         var penalty = 1;
-        if (result[0].class == "thief" && Math.floor(Math.random() * 10) > 9) penalty = 0;
+        if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
         var coins = parseInt(result[0].coins);
         if (coins > 0) {
           coins -= penalty;
