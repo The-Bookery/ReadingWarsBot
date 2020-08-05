@@ -19,6 +19,7 @@ function timedifference(timestamp1, timestamp2) {
 function addRole(message) {
   try {
     var teamrole;
+    var classrole;
     if (teamchoice == 1) {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamone);
     } else if (teamchoice == 2) {
@@ -26,7 +27,19 @@ function addRole(message) {
     } else {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamthree);
     }
+    if (gclass == "knight") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.knight);
+    } else if (gclass == "stonemason") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.stonemason);
+    } else if (gclass == "thief") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.thief);
+    } else {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.joker);
+    }
+
     message.member.roles.add(teamrole);
+    message.member.roles.add(classrole);
+
     message.channel.send(`:wave: You joined team ${teamchoice} as a ${gclass}!`);
   } catch (err) {
     console.log(err);

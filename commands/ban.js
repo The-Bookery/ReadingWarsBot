@@ -10,9 +10,21 @@ function removeMember(client, message, args) {
     const role1 = member.roles.cache.find(role => role.id === config.roles.teamone);
     const role2 = member.roles.cache.find(role => role.id === config.roles.teamtwo);
     const role3 = member.roles.cache.find(role => role.id === config.roles.teamthree);
+
+    const knightrole = member.roles.cache.find(role => role.id === config.roles.knight);
+    const stonemasonrole = member.roles.cache.find(role => role.id === config.roles.stonemason);
+    const thiefrole = member.roles.cache.find(role => role.id === config.roles.thief);
+    const jokerrole = member.roles.cache.find(role => role.id === config.roles.joker);
+
     if (role1) member.roles.remove(role1);
     else if (role2) member.roles.remove(role2);
     else if (role3) member.roles.remove(role3);
+
+    if (knightrole) member.roles.remove(knightrole);
+    else if (stonemasonrole) member.roles.remove(stonemasonrole);
+    else if (thiefrole) member.roles.remove(thiefrole);
+    else if (jokerrole) member.roles.remove(jokerrole);
+
     return `User has been banned and will not be able to join.`;
   } catch (err) {
     console.log(err);

@@ -24,7 +24,20 @@ function addRole(message, member) {
     } else {
       teamrole = message.guild.roles.cache.find(role => role.id === config.roles.teamthree);
     }
+
+    if (gclass == "knight") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.knight);
+    } else if (gclass == "stonemason") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.stonemason);
+    } else if (gclass == "thief") {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.thief);
+    } else {
+      classrole = message.guild.roles.cache.find(role => role.id === config.roles.joker);
+    }
+
+    member.roles.add(classrole);
     member.roles.add(teamrole);
+
     message.channel.send(`${member.user.username} was put on team ${teamchoice} as a ${gclass}!`);
   } catch (err) {
     console.log(err);
