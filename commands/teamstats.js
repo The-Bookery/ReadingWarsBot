@@ -73,6 +73,10 @@ module.exports.execute = async (client, message) => {
         name: `Bomb Cooldown`,
         value: `\`\`\`${bombcooldown} seconds\`\`\``,
         inline: true
+      }, {
+        name: `Coin Stash`,
+        value: `\`\`\`${result[0].coinstash}\`\`\``,
+        inline: true
       },);
       try {
         return message.channel.send(helpMessage);

@@ -1,4 +1,5 @@
 const pomMembers = require('../databaseFiles/pomMembers');
+const pomTeams = require('../databaseFiles/pomTeams');
 
 function pluralFinder(requestedcoins) {
   let plural = "coins";
@@ -22,7 +23,8 @@ module.exports.execute = async (client, message, args) => {
   var userid;
 
   if (args[0] && args.length !== 0) {
-    if (parseInt(args[0])) {
+    if (args[0] == "stash" || args[0] == "team") team = 4;
+    else if (parseInt(args[0])) {
       if (args[0].length == 1) {
         team = args[0];
       } else {
@@ -52,34 +54,75 @@ module.exports.execute = async (client, message, args) => {
         user: message.author.id,
       },
     }).then((senderresult) => {
-      pomMembers.findAll({
-        where: {
-          user: userid,
-        },
-      }).then((receiverresult) => {
-        if (receiverresult[0].team == senderresult[0].team) {
-          pomMembers.update({
-            coins: senderresult[0].coins - requestedcoins
-          }, {
+        if (team != 4) {
+          pomMembers.findAll({
             where: {
-              user: message.author.id
-            }
-          }).then(() => {
+              user: userid,
+            },
+          }).then((receiverresult) => {
+          if (receiverresult[0].team == senderresult[0].team) {
             pomMembers.update({
-              coins: receiverresult[0].coins + requestedcoins
+              coins: senderresult[0].coins - requestedcoins
             }, {
               where: {
-                user: userid
+                user: message.author.id
               }
             }).then(() => {
-              var verb = pluralFinder(requestedcoins);
-              return message.channel.send(`:handshake: You have send ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
+              pomMembers.update({
+                coins: receiverresult[0].coins + requestedcoins
+              }, {
+                where: {
+                  team: userid
+                }
+              }).then(() => {
+                var verb = pluralFinder(requestedcoins);
+                return message.channel.send(`:handshake: You have send ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
+              });
             });
-          });
+          } else {
+            return message.channel.send(':x: Looks like you\'re trying to transfer to someone outside your team... *you traitor*.');
+          }
+          
+    });
         } else {
-          return message.channel.send(':x: Looks like you\'re trying to transfer to someone outside your team... *you traitor*.');
-        }
-      });
+          pomTeams.sync().then(() => {
+            var wordteam;
+
+            if (senderresult[0].team == 1) {
+              wordteam = "one";
+            } else if (senderresult[0].team == 2) {
+              wordteam = "two";
+            } else {
+              wordteam = "three";
+            }
+              console.log("Hello");
+
+            pomTeams.findAll({
+              where: {
+                team: wordteam
+              }
+            }).then((teamresult) => {
+              pomMembers.update({
+                coins: senderresult[0].coins - requestedcoins
+              }, {
+                where: {
+                  user: message.author.id
+                }
+              }).then(() => {
+                pomTeams.update({
+                  coinstash: teamresult[0].coinstash + requestedcoins
+                }, {
+                  where: {
+                    team: wordteam
+                  }
+                }).then(() => {
+                  var verb = pluralFinder(requestedcoins);
+                  return message.channel.send(`:handshake: You have send ${requestedcoins} ${verb} to your team's coin stache. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+                });
+              });
+            });
+        });
+      }
     });
   });
 };

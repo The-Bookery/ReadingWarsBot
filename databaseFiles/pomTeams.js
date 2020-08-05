@@ -29,6 +29,10 @@ module.exports = sequelize.define('PStats', {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  coinstash:{
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   // The following are stats
   stonemasons: {
     type: Sequelize.INTEGER,
