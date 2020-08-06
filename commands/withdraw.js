@@ -62,7 +62,7 @@ module.exports.execute = async (client, message, args) => {
                 }
               }).then(() => {
                 var verb = pluralFinder(requestedcoins);
-                return message.channel.send(`:white_check_mark: You have withdrew ${requestedcoins} ${verb} from your team's coin stache. You now have a total of ${result[0].coins + requestedcoins} and it has a total of ${teamresult[0].coinstash - requestedcoins}.`);
+                return message.channel.send(`:white_check_mark: You have withdrawn ${requestedcoins} ${verb} from your team's coin stash. You now have a total of ${result[0].coins + requestedcoins} and it has a total of ${teamresult[0].coinstash - requestedcoins}.`);
               });
             });
           } else {
