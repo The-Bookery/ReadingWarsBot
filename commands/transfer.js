@@ -107,24 +107,28 @@ module.exports.execute = async (client, message, args) => {
               team: wordteam
             }
           }).then((teamresult) => {
-            pomMembers.update({
-              coins: senderresult[0].coins - requestedcoins
-            }, {
-              where: {
-                user: message.author.id
-              }
-            }).then(() => {
-              pomTeams.update({
-                coinstash: teamresult[0].coinstash + requestedcoins
+            if (requestedcoins <= senderresult[0].coins) {
+              pomMembers.update({
+                coins: senderresult[0].coins - requestedcoins
               }, {
                 where: {
-                  team: wordteam
+                  user: message.author.id
                 }
               }).then(() => {
-                var verb = pluralFinder(requestedcoins);
-                return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to your team's coin stash. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+                pomTeams.update({
+                  coinstash: teamresult[0].coinstash + requestedcoins
+                }, {
+                  where: {
+                    team: wordteam
+                  }
+                }).then(() => {
+                  var verb = pluralFinder(requestedcoins);
+                  return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to your team's coin stash. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+                });
               });
-            });
+            } else {
+              return message.channel.send(':x: You can\'t deposit more coins than you have to your team stash!');
+            }
           });
         });
       }
