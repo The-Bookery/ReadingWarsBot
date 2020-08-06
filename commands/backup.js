@@ -44,7 +44,7 @@ module.exports.execute = async (client, message) => {
 
               var teaminsertresult = await pomTeams.findAll({
                 attributes: [
-                  "team", "points", "members", "walls", "wallcooldown", "bombcooldown", "stonemasons", "thieves", "knights", "jokers", "read", "tradein", "attack", "build", "bomb", "teamone", "teamtwo", "teamthree"
+                  "team", "points", "members", "walls", "wallcooldown", "bombcooldown", "coinstash", "stonemasons", "thieves", "knights", "jokers", "read", "tradein", "attack", "build", "bomb", "teamone", "teamtwo", "teamthree"
                 ]
               });
               for (var j = 0; j < teaminsertresult.length; ++j) {
@@ -55,6 +55,7 @@ module.exports.execute = async (client, message) => {
                   walls: teaminsertresult[j].walls,
                   wallcooldown: teaminsertresult[j].wallcooldown,
                   bombcooldown: teaminsertresult[j].bombcooldown,
+                  coinstash: teaminsertresult[j].coinstash,
                   stonemasons: teaminsertresult[j].stonemasons,
                   thieves: teaminsertresult[j].thieves,
                   knights: teaminsertresult[j].knights,
