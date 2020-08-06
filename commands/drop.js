@@ -40,8 +40,8 @@ module.exports.execute = async (client, message) => {
             });
           });
         } else if (m.content.includes('no') || m.content.includes('n')) {
-          message.channel.send('Database has **not** been reset!');
           collector.stop();
+          return message.channel.send('Database has **not** been reset!');
         }
       });
     });
