@@ -70,6 +70,7 @@ module.exports.execute = async (client, message) => {
                 });
               }
 
+              collector.stop();
               return await message.channel.send(':white_check_mark: Backup made of member and team tables!');
             } catch (err) {
               console.log(err);

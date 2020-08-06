@@ -76,13 +76,12 @@ module.exports.execute = async (client, message, args) => {
                 }
               }).then(() => {
                 var verb = pluralFinder(requestedcoins);
-                return message.channel.send(`:handshake: You have send ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
+                return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
               });
             });
           } else {
             return message.channel.send(':x: Looks like you\'re trying to transfer to someone outside your team... *you traitor*.');
           }
-          
     });
         } else {
           pomTeams.sync().then(() => {
@@ -117,7 +116,7 @@ module.exports.execute = async (client, message, args) => {
                   }
                 }).then(() => {
                   var verb = pluralFinder(requestedcoins);
-                  return message.channel.send(`:handshake: You have send ${requestedcoins} ${verb} to your team's coin stache. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+                  return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to your team's coin stash. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
                 });
               });
             });
