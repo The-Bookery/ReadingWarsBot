@@ -92,4 +92,5 @@ module.exports.config = {
   aliases: ['bu'],
   description: 'Backs up both the members and the teams database. Make sure both of these have no issues before running this!',
   usage: ['backup'],
+  adminonly: true,
 };

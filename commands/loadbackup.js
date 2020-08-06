@@ -92,4 +92,5 @@ module.exports.config = {
   aliases: ['loadbackup'],
   description: 'Overwrites the database and loads the latest backup.',
   usage: ['loadbackup'],
+  adminonly: true,
 };

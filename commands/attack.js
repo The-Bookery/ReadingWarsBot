@@ -95,7 +95,6 @@ module.exports.execute = async (client, message, args) => {
           team: wordtarget,
         },
       }).then((targetresult) => {
-        
         var wordteam;
 
         if (team == 1) {
@@ -115,11 +114,11 @@ module.exports.execute = async (client, message, args) => {
 
         if (coins > 0) {
           coins -= 1;
-            var random = 26;
+            var random = 25;
             var penalty = 1;
 
-            if (result[0].class == "knight") random = 16;
-            else if (result[0].class == "joker") random = 21;
+            if (result[0].class == "knight") random = 15;
+            else if (result[0].class == "joker") random = 20;
             else if (result[0].class == "thief" && Math.floor(Math.random() * 10) + 1 > 8) penalty = 0;
 
             var stolen = randomInteger(500, 800);
