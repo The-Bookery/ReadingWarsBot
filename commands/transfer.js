@@ -6,6 +6,7 @@ function pluralFinder(requestedcoins) {
   if (requestedcoins === 1) plural = "coins";
   return plural;
 }
+
 module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[1] && parseInt(args[1])) {
@@ -18,7 +19,14 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
+
+  var team;
   var userid;
+
+  if (!args[1]) {
+    return await message.channel.send(':x: You must add an amount to transfer!');
+  }
+
   if (args[0] && args.length !== 0) {
     if (args[0] == "stash" || args[0] == "team") team = 4;
     else if (parseInt(args[0])) {
