@@ -6,7 +6,6 @@ function pluralFinder(requestedcoins) {
   if (requestedcoins === 1) plural = "coins";
   return plural;
 }
-
 module.exports.execute = async (client, message, args) => {
   var requestedcoins;
   if (args[1] && parseInt(args[1])) {
@@ -19,9 +18,7 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send('Looks like you didn\'t input a proper number! Try again.');
   }
-
   var userid;
-
   if (args[0] && args.length !== 0) {
     if (args[0] == "stash" || args[0] == "team") team = 4;
     else if (parseInt(args[0])) {
@@ -47,60 +44,20 @@ module.exports.execute = async (client, message, args) => {
   } else {
     return await message.channel.send(':x: Couldn\'t find that user! Try again.');
   }
-
   pomMembers.sync().then(() => {
     pomMembers.findAll({
       where: {
         user: message.author.id,
       },
     }).then((senderresult) => {
-        if (team != 4) {
-          pomMembers.findAll({
-            where: {
-              user: userid,
-            },
-          }).then((receiverresult) => {
-          if (receiverresult[0].team == senderresult[0].team) {
-            pomMembers.update({
-              coins: senderresult[0].coins - requestedcoins
-            }, {
-              where: {
-                user: message.author.id
-              }
-            }).then(() => {
-              pomMembers.update({
-                coins: receiverresult[0].coins + requestedcoins
-              }, {
-                where: {
-                  team: userid
-                }
-              }).then(() => {
-                var verb = pluralFinder(requestedcoins);
-                return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
-              });
-            });
-          } else {
-            return message.channel.send(':x: Looks like you\'re trying to transfer to someone outside your team... *you traitor*.');
-          }
-    });
-        } else {
-          pomTeams.sync().then(() => {
-            var wordteam;
-
-            if (senderresult[0].team == 1) {
-              wordteam = "one";
-            } else if (senderresult[0].team == 2) {
-              wordteam = "two";
-            } else {
-              wordteam = "three";
-            }
-              console.log("Hello");
-
-            pomTeams.findAll({
-              where: {
-                team: wordteam
-              }
-            }).then((teamresult) => {
+      if (team != 4) {
+        pomMembers.findAll({
+          where: {
+            user: userid,
+          },
+        }).then((receiverresult) => {
+          if (requestedcoins <= senderresult[0].coins) {
+            if (receiverresult[0].team == senderresult[0].team) {
               pomMembers.update({
                 coins: senderresult[0].coins - requestedcoins
               }, {
@@ -108,18 +65,59 @@ module.exports.execute = async (client, message, args) => {
                   user: message.author.id
                 }
               }).then(() => {
-                pomTeams.update({
-                  coinstash: teamresult[0].coinstash + requestedcoins
+                pomMembers.update({
+                  coins: receiverresult[0].coins + requestedcoins
                 }, {
                   where: {
-                    team: wordteam
+                    team: userid
                   }
                 }).then(() => {
                   var verb = pluralFinder(requestedcoins);
-                  return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to your team's coin stash. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+                  return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to the specified user. You now have a total of ${senderresult[0].coins - requestedcoins} and they have a total of ${receiverresult[0].coins + requestedcoins}.`);
                 });
               });
+            } else {
+              return message.channel.send(':x: Looks like you\'re trying to transfer to someone outside your team... *you traitor*.');
+            }
+          } else {
+            return message.channel.send(':x: You can\'t send more coins than you have!');
+          }
+        });
+      } else {
+        pomTeams.sync().then(() => {
+          var wordteam;
+          if (senderresult[0].team == 1) {
+            wordteam = "one";
+          } else if (senderresult[0].team == 2) {
+            wordteam = "two";
+          } else {
+            wordteam = "three";
+          }
+          console.log("Hello");
+          pomTeams.findAll({
+            where: {
+              team: wordteam
+            }
+          }).then((teamresult) => {
+            pomMembers.update({
+              coins: senderresult[0].coins - requestedcoins
+            }, {
+              where: {
+                user: message.author.id
+              }
+            }).then(() => {
+              pomTeams.update({
+                coinstash: teamresult[0].coinstash + requestedcoins
+              }, {
+                where: {
+                  team: wordteam
+                }
+              }).then(() => {
+                var verb = pluralFinder(requestedcoins);
+                return message.channel.send(`:handshake: You have sent ${requestedcoins} ${verb} to your team's coin stash. You now have a total of ${senderresult[0].coins - requestedcoins} and it has a total of ${teamresult[0].coinstash + requestedcoins}.`);
+              });
             });
+          });
         });
       }
     });

@@ -10,7 +10,7 @@ You can also join a class, which will give you different buffs to play to your s
       value: `This command should be run after doing 15 minutes of reading. Feel free to add a number afterward (e.g. \`b-read 3\`) for a certain amount of 15-minute reading times. Be sure to actually time yourself while doing this (you could, for example, set a 2 hour timer and then use \`b-read 8\`). Stay honest or you could get banned from the event and even future events.`
     }, {
       name: `\`b-attack <team number>\``,
-      value: `This will attempt an attack against the team you target. It can fail on occasion, making you lose the coin, and can be blocked by walls, which will also make you lose the coin. If it succeeds, it will take a random amount of coins from the opposing team's top players, and give it to you.`
+      value: `This will attempt an attack against the team you target. It can fail on occasion, making you lose the coin, and can be blocked by walls, which will also make you lose the coin. If it succeeds, it will take a random amount of points from the opposing team's top players, and give it to you.`
     }, {
       name: `\`b-tradein [number]\``,
       value: `This is a safer but less effective way of getting points than attacking. It has an exchange rate of 100 points to 1 coin, which is far from the potential for attack. It is suggested you use this more in the early game before the other teams have enough points for your attacks to be useful, however.`
