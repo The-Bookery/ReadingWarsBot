@@ -2,6 +2,8 @@ const config = require('../config.json');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomBans = require('../databaseFiles/pomBans');
 const pomTeams = require('../databaseFiles/pomTeams');
+const pomMembersBackup = require('../databaseFiles/pomMembersBackup');
+const pomTeamsBackup = require('../databaseFiles/pomTeamsBackup');
 
 function removeMember(client, message, args) {
   try {
@@ -76,6 +78,26 @@ module.exports.execute = async (client, message, args) => {
                         team: wordteam,
                       }
                     }).then(() => {
+                      (async () => {
+                        // Quietly remove from backup database
+                        await pomTeamsBackup.sync();
+                        await pomMembersBackup.sync();
+                        await pomMembersBackup.destroy({
+                          where: {
+                            user: message.author.id,
+                          }
+                        });
+    
+                        pomTeamsBackup.update({
+                          points: teamresult[0].points - result[0].points,
+                          read: teamresult[0].read - result[0].read,
+                          tradein: teamresult[0].tradein - result[0].tradein,
+                          attack: teamresult[0].attack - result[0].attack,
+                          build: teamresult[0].build - result[0].build,
+                          bomb: teamresult[0].bomb - result[0].bomb
+                        });
+                      })();
+                      
                       var gclass = result[0].class;
                       if (gclass == "knight") {
                         pomTeams.update({

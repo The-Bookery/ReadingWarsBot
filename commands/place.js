@@ -3,6 +3,8 @@ const pomMembers = require('../databaseFiles/pomMembers');
 const pomBans = require('../databaseFiles/pomBans');
 const pomTeams = require('../databaseFiles/pomTeams');
 const pomLeaves = require('../databaseFiles/pomLeaves');
+const pomMembersBackup = require('../databaseFiles/pomMembersBackup');
+const pomTeamsBackup = require('../databaseFiles/pomTeamsBackup');
 
 // call function with variables timestamp1 and timestamp2 in call
 function timesubtract(timestamp1) {
@@ -114,6 +116,59 @@ module.exports.execute = async (client, message, args) => {
                             team: wordteam
                           }
                         }).then((teamresult) => {
+                          (async () => {
+                            // Quietly add to backup database
+                            await pomTeamsBackup.sync();
+                            await pomMembersBackup.sync();
+                            await pomMembersBackup.create({
+                              user: args[0],
+                              team: teamchoice,
+                              coins: 0,
+                              points: 0,
+                              class: gclass,
+                              classchange: timesubtract(Date.now()),
+                              read: 0,
+                              tradein: 0,
+                              attack: 0,
+                              build: 0,
+                              bomb: 0
+                            });
+
+                            if (gclass == "knight") {
+                              await pomTeamsBackup.update({
+                                knights: teamresult[0].knights + 1
+                              }, {
+                                where: {
+                                  team: wordteam
+                                }
+                              });
+                            } else if (gclass == "thief") {
+                              await pomTeams.update({
+                                thieves: teamresult[0].thieves + 1
+                              }, {
+                                where: {
+                                  team: wordteam
+                                }
+                              });
+                            } else if (gclass == "stonemason") {
+                              await pomTeams.update({
+                                stonemasons: teamresult[0].stonemasons + 1
+                              }, {
+                                where: {
+                                  team: wordteam
+                                }
+                              });
+                            } else if (gclass == "joker") {
+                              await pomTeams.update({
+                                jokers: teamresult[0].jokers + 1
+                              }, {
+                                where: {
+                                  team: wordteam
+                                }
+                              });
+                            }
+                          })();
+
                           if (gclass == "knight") {
                             pomTeams.update({
                               knights: teamresult[0].knights + 1
