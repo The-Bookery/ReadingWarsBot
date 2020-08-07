@@ -138,6 +138,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'transfer',
   aliases: ['send'],
-  description: 'Send a user your coins!',
-  usage: ['transfer <user> [coins]'],
+  description: 'Send teammate some of your coins, or send it to your team\'s stash.',
+  usage: ['transfer <user | "team"> <coins>'],
 };

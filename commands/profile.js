@@ -213,6 +213,6 @@ Jokers: ${result[0].jokers}\`\`\``).addFields({
 module.exports.config = {
   name: 'profile',
   aliases: ['rank', 'stats'],
-  description: 'Learn about a team\'s stats, or a specific user.',
+  description: 'Learn about a team\'s stats, or stats about a specific member.',
   usage: ['profile <user | team number>'],
 };

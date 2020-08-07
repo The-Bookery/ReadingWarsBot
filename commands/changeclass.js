@@ -153,6 +153,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'changeclass',
   aliases: ['cc'],
-  description: 'Change your class.',
+  description: 'Change your class after 24 hours of changing it last.',
   usage: ['changeclass <knight | thief | stonemason | joker>'],
 };

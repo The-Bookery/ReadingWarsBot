@@ -151,6 +151,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'bomb',
   aliases: ['bomb'],
-  description: 'Breaks down three walls at a time.',
-  usage: ['bomb [team number]'],
+  description: 'Does a certain amount of damage (RNG-based) to whichever team\'s walls you target. Therefore, it is more efficient than the attack command at breaking down walls because it does far more damage to walls than attacks do. However, it does not earn you any points. The team must wait for 30 seconds before they can bomb again.',
+  usage: ['bomb <team number>'],
 };

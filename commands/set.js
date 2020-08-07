@@ -110,7 +110,7 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'set',
   aliases: ['set'],
-  description: 'Sets a user or team\'s coins or points.',
+  description: 'Sets a user or team\'s coins or points to the specified value.',
   usage: ['set <team | user> <user ID> <coins | points> <amount>'],
   adminonly: true,
 };

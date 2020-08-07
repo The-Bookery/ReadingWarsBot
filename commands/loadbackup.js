@@ -90,7 +90,7 @@ module.exports.execute = async (client, message) => {
 module.exports.config = {
   name: 'loadbackup',
   aliases: ['loadbackup'],
-  description: 'Overwrites the database and loads the latest backup.',
+  description: 'Overwrites the current database and loads the latest backup.',
   usage: ['loadbackup'],
   adminonly: true,
 };

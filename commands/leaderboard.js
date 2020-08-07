@@ -31,6 +31,6 @@ module.exports.execute = async (client, message) => {
 module.exports.config = {
   name: 'leaderboard',
   aliases: ['lb', 'top'],
-  description: 'See the top ten members.',
-  usage: ['profile <user | team number>'],
+  description: 'See the top teams and their points.',
+  usage: ['leaderboard'],
 };

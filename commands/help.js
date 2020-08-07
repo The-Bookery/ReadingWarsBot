@@ -104,7 +104,6 @@ function levenshtein(searchTerm, commandName) {
 module.exports.config = {
   name: 'help',
   aliases: ['help'],
-  module: 'Utility',
   description: 'I will send you this message, or the usage of a specific command.',
   usage: ['help', 'help command'],
 };

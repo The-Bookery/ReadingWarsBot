@@ -183,6 +183,6 @@ module.exports.config = {
   name: 'place',
   aliases: ['place'],
   description: 'Manually put a member on a specific team.',
-  usage: ['place <user ID> <team #> <class>'],
+  usage: ['place <user ID> <team number> <class>'],
   adminonly: true,
 };

@@ -81,5 +81,5 @@ module.exports.config = {
   name: 'users',
   aliases: ['teammembers'],
   description: 'See a list of a team\'s members.',
-  usage: ['user <team> [page]'],
+  usage: ['users <team> [page]'],
 };
