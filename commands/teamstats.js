@@ -46,8 +46,6 @@ module.exports.execute = async (client, message) => {
       var onecooldown = 30 - timedifference(result[0].teamone, Date.now(), "m");
       if (onecooldown < 0) onecooldown = 0;
 
-      console.log(config.teamnames);
-
       let helpMessage = new Discord.MessageEmbed()
       .setColor('#750384')
       .setTitle('Team info for the ' + config.teamnames[wordteam] + '.')
