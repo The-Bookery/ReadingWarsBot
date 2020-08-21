@@ -43,7 +43,7 @@ function addRole(message) {
     message.member.roles.add(teamrole);
     message.member.roles.add(classrole);
 
-    message.channel.send(`:wave: You joined the ${config.teamnames[wordteam]} as a ${gclass}!`);
+    message.channel.send(`:wave: You joined the **${config.teamnames[wordteam]}** as a ${gclass}!`);
   } catch (err) {
     console.log(err);
   }
