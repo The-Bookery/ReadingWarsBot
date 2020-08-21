@@ -166,7 +166,7 @@ module.exports.execute = async (client, message, args) => {
             }
           }
           let memberCount = result[0].knights + result[0].thieves + result[0].jokers + result[0].stonemasons;
-          let helpMessage = new Discord.MessageEmbed().setColor('#750384').setTitle('Statistics for team ' + wordteam + '.').setDescription(`See statistics about this team's habits.`).addFields({
+          let helpMessage = new Discord.MessageEmbed().setColor('#750384').setTitle('Statistics for team ' + wordteam + ' (' + config.teamnames[wordteam] + ').').setDescription(`See statistics about this team's habits.`).addFields({
             name: `Points`,
             value: `\`\`\`${result[0].points}\`\`\``,
             inline: true

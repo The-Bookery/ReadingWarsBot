@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const pomTeams = require('../databaseFiles/pomTeams');
 const Sequelize = require('sequelize');
+const config = require('../config.json');
+
 module.exports.execute = async (client, message) => {
   try {
     pomTeams.sync().then(() => {
@@ -11,7 +13,8 @@ module.exports.execute = async (client, message) => {
         if (result.length >= 1) {
           let helpMessage = new Discord.MessageEmbed().setColor('#750384').setTitle('Team Leaderboard').setDescription(`See the ranks of teams!`);
           for (var i = 0; i < result.length; ++i) {
-            helpMessage.addField(`**Team ${result[i].team[0].toUpperCase() + result[i].team.slice(1)}**`, `\`\`\`${result[i].points}\`\`\``);
+            var teamname = result[i].team;
+            helpMessage.addField(`**Team ${teamname[0].toUpperCase() + teamname.slice(1)} (${config.teamnames[teamname]})**`, `\`\`\`${result[i].points}\`\`\``);
             if (i == 9) break;
           }
           try {

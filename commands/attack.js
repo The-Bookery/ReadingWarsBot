@@ -11,7 +11,7 @@ function timedifference(timestamp1, timestamp2) {
 
   let difference = timestamp2.getTime() - timestamp1.getTime();
 
-  difference = Math.floor(difference / 1000 / 60);
+  difference = Math.floor(difference / 1000); /// 60);
 
   return difference;
 }
@@ -198,9 +198,10 @@ module.exports.execute = async (client, message, args) => {
                                 var stole = `${plural}.`;
                                 updateCooldown(wordtarget, wordteam);
                                 if (penalty == 0) stole = `, losing no ${plural} because of your thief class!`;
-                                return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from team ${wordtarget}. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
+                                console.log("Teams: " + config.teamnames[wordteam]);
+                                return message.channel.send(`:crossed_swords: You attacked! Stealing ${givenPoints} points from the **${config.teamnames[wordtarget]}**. Their points are now at ${newPoints}, and yours are at ${teamresult[0].points + givenPoints}. You now have ${result[0].coins - penalty} ${stole}`);})
                                 .then(() => {
-                                  targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! They stole ${givenPoints} points. You now have ${newPoints}. <@&${config.roles.pingrole}>`);
+                                  targetchannel.send(`:crossed_swords: You have been attacked by the **${config.teamnames[wordteam]}**! They stole ${givenPoints} points. You now have ${newPoints}. <@&${config.roles.pingrole}>`);
                                 })
                                 .catch((err) => {
                                   console.error("Error! ", err);
@@ -232,7 +233,7 @@ module.exports.execute = async (client, message, args) => {
                       return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls were ${verb}, and now have a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
                     })
                     .then(() => {
-                      targetchannel.send(`:crossed_swords: You have been attacked by team ${teamresult[0].team}! Your walls blocked the attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
+                      targetchannel.send(`:crossed_swords: You have been attacked by the **${config.teamnames.teamresult[0].team}**! Your walls blocked the attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
                     })
                     .catch((err) => {
                       console.error("Error! ", err);
@@ -253,7 +254,7 @@ module.exports.execute = async (client, message, args) => {
           return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
-        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');
+        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Use `b-join` to get started!');
       }
     }).catch((err) => { // teamresult
       console.error("Error! ", err);

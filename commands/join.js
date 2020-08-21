@@ -5,6 +5,7 @@ const pomTeams = require('../databaseFiles/pomTeams');
 const pomLeaves = require('../databaseFiles/pomLeaves');
 const pomMembersBackup = require('../databaseFiles/pomMembersBackup');
 const pomTeamsBackup = require('../databaseFiles/pomTeamsBackup');
+
 var teamchoice = 1;
 var wordteam = "one";
 var gclass;
@@ -42,7 +43,7 @@ function addRole(message) {
     message.member.roles.add(teamrole);
     message.member.roles.add(classrole);
 
-    message.channel.send(`:wave: You joined team ${teamchoice} as a ${gclass}!`);
+    message.channel.send(`:wave: You joined the ${config.teamnames[wordteam]} as a ${gclass}!`);
   } catch (err) {
     console.log(err);
   }
