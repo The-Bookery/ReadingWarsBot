@@ -124,7 +124,7 @@ module.exports.execute = async (client, message, args) => {
                           } else {
                             targetchannel.send(`:bomb: The **${config.teamnames[teamresult[0].team]}** attempted to bomb you, but it was a dud! It did no damage to your walls. <@&${config.roles.pingrole}>`);
                           }
-                          return message.channel.send(`:bomb: You have ${verb} team ${config.teamnames[target]}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
+                          return message.channel.send(`:bomb: You have ${verb} team ${config.teamnames[wordtarget]}'s walls${addition}, doing a damage of ${damage}. Their walls are now at ${newWalls}. You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
                         });
                       }).catch((error) => {
                         console.log('Update error: ' + error);
