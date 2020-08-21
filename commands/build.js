@@ -93,7 +93,7 @@ module.exports.execute = async (client, message) => {
           return message.channel.send(`:x: You don't have enough coins for this! You only have ${result[0].coins} coins.`);
         }
       } else {
-        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');
+        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `b-join` to get started!');
       }
     });
   });

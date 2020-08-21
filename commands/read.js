@@ -69,7 +69,7 @@ module.exports.execute = async (client, message, args) => {
           });
         });
       } else {
-        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `,join` to get started!');
+        return message.channel.send('Woah! Somehow you aren\'t in the challenge yet! Run `b-join` to get started!');
       }
     });
   });
