@@ -48,7 +48,7 @@ module.exports.execute = async (client, message) => {
 
       let helpMessage = new Discord.MessageEmbed()
       .setColor('#750384')
-      .setTitle('Team info for the ' + config.teamsnames[wordteam] + '.')
+      .setTitle('Team info for the ' + config.teamnames[wordteam] + '.')
       .setDescription(`See statistics about team ${wordteam}.`)
       .addFields({
         name: `Walls`,
