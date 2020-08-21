@@ -120,11 +120,11 @@ module.exports.execute = async (client, message, args) => {
                           let plural = "coins";
                           if (penalty === 1) plural = "coin";
                           if (damage > 0) {
-                            targetchannel.send(`:bomb: You have been bombed by the **${config.teamname[teamresult[0].team]}**! Your walls are now at ${newWalls}. <@&${config.roles.pingrole}>`);
+                            targetchannel.send(`:bomb: You have been bombed by the **${config.teamnames[teamresult[0].team]}**! Your walls are now at ${newWalls}. <@&${config.roles.pingrole}>`);
                           } else {
-                            targetchannel.send(`:bomb: The **${config.teamname[teamresult[0].team]}** attempted to bomb you, but it was a dud! It did no damage to your walls. <@&${config.roles.pingrole}>`);
+                            targetchannel.send(`:bomb: The **${config.teamnames[teamresult[0].team]}** attempted to bomb you, but it was a dud! It did no damage to your walls. <@&${config.roles.pingrole}>`);
                           }
-                          return message.channel.send(`:bomb: You have ${verb} team ${config.teamname[target]}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
+                          return message.channel.send(`:bomb: You have ${verb} team ${config.teamnames[target]}'s walls${addition}. Their walls are now at ${newWalls}! You lost ${penalty} ${plural} in the process and now have ${result[0].coins - 1}.`);
                         });
                       }).catch((error) => {
                         console.log('Update error: ' + error);
