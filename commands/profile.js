@@ -95,7 +95,7 @@ module.exports.execute = async (client, message, args) => {
               } else {
                 wordteam = "three";
               }
-              
+
               const guild = client.guilds.cache.get(message.guild.id);
               const member = guild.members.cache.get(userid);
               let helpMessage = new Discord.MessageEmbed().setColor('#750384').setTitle('Statistics for ' + member.user.username + '.').setDescription(`See granular statistics about this user's habits.`).addFields({
@@ -108,7 +108,7 @@ module.exports.execute = async (client, message, args) => {
                 inline: true
               }, ).addFields({
                 name: `Team`,
-                value: `\`\`\`${(config.teamnames[teamname])} (${teamname[0].toUpperCase() + teamname.slice(1)})\`\`\``
+                value: `\`\`\`${(config.teamnames[wordteam])} (${wordteam[0].toUpperCase() + wordteam.slice(1)})\`\`\``
               }, {
                 name: `Class`,
                 value: `\`\`\`${result[0].class[0].toUpperCase() + result[0].class.slice(1)}\`\`\``
