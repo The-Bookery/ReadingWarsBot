@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const pomMembers = require('../databaseFiles/pomMembers');
 const pomTeams = require('../databaseFiles/pomTeams');
 const Sequelize = require('sequelize');
+const config = require('../config.json');
 module.exports.execute = async (client, message, args) => {
   var userid;
   var team;
@@ -85,6 +86,16 @@ module.exports.execute = async (client, message, args) => {
                   break;
                 }
               }
+              var wordteam;
+
+              if (team == 1) {
+                wordteam = "one";
+              } else if (team == 2) {
+                wordteam = "two";
+              } else {
+                wordteam = "three";
+              }
+              
               const guild = client.guilds.cache.get(message.guild.id);
               const member = guild.members.cache.get(userid);
               let helpMessage = new Discord.MessageEmbed().setColor('#750384').setTitle('Statistics for ' + member.user.username + '.').setDescription(`See granular statistics about this user's habits.`).addFields({
@@ -97,7 +108,7 @@ module.exports.execute = async (client, message, args) => {
                 inline: true
               }, ).addFields({
                 name: `Team`,
-                value: `\`\`\`${result[0].team[0].toUpperCase() + result[0].team.slice(1)}\`\`\``
+                value: `\`\`\`${(config.teamnames[teamname])} (${teamname[0].toUpperCase() + teamname.slice(1)})\`\`\``
               }, {
                 name: `Class`,
                 value: `\`\`\`${result[0].class[0].toUpperCase() + result[0].class.slice(1)}\`\`\``
