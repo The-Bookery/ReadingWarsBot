@@ -88,9 +88,9 @@ module.exports.execute = async (client, message, args) => {
               }
               var wordteam;
 
-              if (team == 1) {
+              if (result[0].team == 1) {
                 wordteam = "one";
-              } else if (team == 2) {
+              } else if (result[0].team == 2) {
                 wordteam = "two";
               } else {
                 wordteam = "three";
