@@ -14,6 +14,8 @@ module.exports.execute = async (client, message, args) => {
   } else if (args[0] == 3) {
     team = 3;
     wordteam = "three";
+  } else if (args[0] == "all") {
+    wordteam = "all";
   } else {
     return await message.channel.send('Please select a team!');
   }
@@ -33,46 +35,87 @@ module.exports.execute = async (client, message, args) => {
 
     page -= 1;
 
-    pomMembers.findAll({
-      where: {
-        team: team,
-      },
-    }).then((result) => {
-      let embedMessage = new Discord.MessageEmbed()
-      .setColor('#750384')
-      .setTitle('Users in team ' + wordteam + '.')
-      .setDescription(`A list of users in a specified team in no specific order.`);
+    if (wordteam == "all") {
+      pomMembers.findAll().then((result) => {
+        var membercount = result.length;
+        let embedMessage = new Discord.MessageEmbed()
+        .setColor('#750384')
+        .setTitle('All users.')
+        .setDescription(`A list of ${membercount} users in all teams in no specific order. (Each page only shows 10)`);
 
-      var userlist = "";
-      const guild = client.guilds.cache.get(message.guild.id);
+        var userlist = "";
+        const guild = client.guilds.cache.get(message.guild.id);
 
-      var lines = 10;
-      if (result.length < 10) lines = result.length;
+        var lines = 10;
+        if (result.length < 10) lines = result.length;
 
-      if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
+        if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
 
-      for (var i = page * 10; i < (page * 10) + lines; ++i) {
-        if (result[i].user) {
-          var member = guild.members.cache.get(result[i].user);
+        for (var i = page * 10; i < (page * 10) + lines; ++i) {
+          if (result[i].user) {
+            var member = guild.members.cache.get(result[i].user);
 
-          var name = member.user.username;
-          if (member.nickname) name = member.nickname;
+            var name = member.user.username;
+            if (member.nickname) name = member.nickname;
 
-          userlist = userlist + name + "\n";
-        } else break;
-      }
+            userlist = userlist + i + ": " + name + "\n";
+          } else break;
+        }
 
-      embedMessage.addField(
-        "Users on This Team",
-        userlist
-      );
+        embedMessage.addField(
+          "Users on This Team",
+          userlist
+        );
 
-      try {
-        return message.channel.send(embedMessage);
-      } catch (err) {
-        console.log(err);
-      }
-    });
+        try {
+          return message.channel.send(embedMessage);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    } else {
+      pomMembers.findAll({
+        where: {
+          team: team,
+        },
+      }).then((result) => {
+        var membercount = result.length;
+        let embedMessage = new Discord.MessageEmbed()
+        .setColor('#750384')
+        .setTitle('Users in team ' + wordteam + '.')
+        .setDescription(`A list of ${membercount} users in a specified team in no specific order. (Each page only shows 10)`);
+
+        var userlist = "";
+        const guild = client.guilds.cache.get(message.guild.id);
+
+        var lines = 10;
+        if (result.length < 10) lines = result.length;
+
+        if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
+
+        for (var i = page * 10; i < (page * 10) + lines; ++i) {
+          if (result[i].user) {
+            var member = guild.members.cache.get(result[i].user);
+
+            var name = member.user.username;
+            if (member.nickname) name = member.nickname;
+
+            userlist = userlist + i + ": " + name + "\n";
+          } else break;
+        }
+
+        embedMessage.addField(
+          "Users on This Team",
+          userlist
+        );
+
+        try {
+          return message.channel.send(embedMessage);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    }
   } catch (err) {
     console.error("Sequelize error: ", err);
   }
@@ -80,6 +123,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'users',
   aliases: ['teammembers'],
-  description: 'See a list of a team\'s members.',
+  description: 'See a list of a team\'s members. Use `all` for the `<team>` to see all members in the game.',
   usage: ['users <team> [page]'],
 };
