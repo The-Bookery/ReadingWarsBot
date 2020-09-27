@@ -58,7 +58,7 @@ module.exports.execute = async (client, message, args) => {
             var name = member.user.username;
             if (member.nickname) name = member.nickname;
 
-            userlist = userlist + i + ": " + name + "\n";
+            userlist = userlist + (i+1) + ": " + name + "\n";
           } else break;
         }
 
