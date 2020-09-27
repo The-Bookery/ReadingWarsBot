@@ -55,7 +55,9 @@ module.exports.execute = async (client, message, args) => {
           lines = lines - (page-1)*10 - 1;
         }
 
-        console.log(lines);
+        console.log((page*10));
+        console.log(result.length);
+        console.log("Lines: " + lines)
 
 
         for (var i = page * 10; i < (page * 10) + lines; ++i) {
