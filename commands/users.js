@@ -50,6 +50,11 @@ module.exports.execute = async (client, message, args) => {
         if (result.length < 10) lines = result.length;
 
         if (!result[(page * 10)]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
+        
+        if (((page*10)-1)-result.length > 0) {
+          lines = lines - (page-1)*10;
+        }
+
 
         for (var i = page * 10; i < (page * 10) + lines; ++i) {
           console.log(i);
@@ -92,12 +97,11 @@ module.exports.execute = async (client, message, args) => {
         var lines = 10;
         if (result.length < 10) lines = result.length;
 
-        console.log(page);
-        console.log(page * 10);
-        console.log(result[(page * 10)]);
-
         if (!result[(page * 10)]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
-
+        if (((page*10)-1)-result.length > 0) {
+          lines = lines - (page-1)*10;
+        }
+        
         for (var i = page * 10; i < (page * 10) + lines; ++i) {
           if (result[i].user) {
             var member = guild.members.cache.get(result[i].user);
