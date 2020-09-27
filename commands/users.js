@@ -49,7 +49,7 @@ module.exports.execute = async (client, message, args) => {
         var lines = 10;
         if (result.length < 10) lines = result.length;
 
-        if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
+        if (!result[(page * 10)]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
 
         for (var i = page * 10; i < (page * 10) + lines; ++i) {
           if (result[i].user) {
@@ -91,7 +91,7 @@ module.exports.execute = async (client, message, args) => {
         var lines = 10;
         if (result.length < 10) lines = result.length;
 
-        if (!result[page * 10]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
+        if (!result[(page * 10)]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
 
         for (var i = page * 10; i < (page * 10) + lines; ++i) {
           if (result[i].user) {
