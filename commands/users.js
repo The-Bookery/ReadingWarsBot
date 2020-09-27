@@ -51,11 +51,11 @@ module.exports.execute = async (client, message, args) => {
 
         if (!result[(page * 10)]) return message.channel.send(':x: Looks like your page number is out of range! Try again with a lower page number.');
         
-        if (((page*10)-1)-result.length > 0) {
+        if (((page+1)*10)-result.length > 0) {
           lines = lines - (page-1)*10 - 1;
         }
 
-        console.log((page*10));
+        console.log((page+1)*10);
         console.log(result.length);
         console.log("Lines: " + lines)
 
