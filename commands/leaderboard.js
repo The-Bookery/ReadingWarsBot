@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const pomTeams = require('../databaseFiles/pomTeams');
+const pomMembers = require('../databaseFiles/pomMembers');
 const Sequelize = require('sequelize');
 const config = require('../config.json');
 
