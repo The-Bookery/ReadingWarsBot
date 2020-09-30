@@ -4,8 +4,7 @@ const Sequelize = require('sequelize');
 const config = require('../config.json');
 
 module.exports.execute = async (client, message, args) => {
-  try {
-    var focus;
+  var focus;
 
   if (args[0]) {
     if (args[0].toLowerCase() == "humans" && message.member.hasPermission('ADMINISTRATOR')) {
