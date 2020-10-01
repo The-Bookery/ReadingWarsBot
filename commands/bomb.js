@@ -75,7 +75,7 @@ module.exports.execute = async (client, message, args) => {
                 team: wordteam,
               },
             }).then((teamresult) => {
-              if (timedifference(teamresult[0].bombcooldown, Date.now()) >= 20) {
+              if (timedifference(teamresult[0].bombcooldown, Date.now()) >= 60) {
                 pomTeams.findAll({
                   where: {
                     team: wordtarget,
@@ -135,7 +135,7 @@ module.exports.execute = async (client, message, args) => {
                   }
                 });
               } else {
-                return message.channel.send(`:x: You must wait 20 seconds before your team can bomb again! Please wait another ${20 - timedifference(teamresult[0].bombcooldown, Date.now())} seconds.`);
+                return message.channel.send(`:x: You must wait 60 seconds before your team can bomb again! Please wait another ${60 - timedifference(teamresult[0].bombcooldown, Date.now())} seconds.`);
               }
             });
           });
@@ -151,6 +151,6 @@ module.exports.execute = async (client, message, args) => {
 module.exports.config = {
   name: 'bomb',
   aliases: ['bomb'],
-  description: 'Does a certain amount of damage (RNG-based) to whichever team\'s walls you target. Therefore, it is more efficient than the attack command at breaking down walls because it does far more damage to walls than attacks do. However, it does not earn you any points. The team must wait for 30 seconds before they can bomb again.',
+  description: 'Does a certain amount of damage (RNG-based) to whichever team\'s walls you target. Therefore, it is more efficient than the attack command at breaking down walls because it does far more damage to walls than attacks do. However, it does not earn you any points. The team must wait for 5 minutes before they can bomb again.',
   usage: ['bomb <team number>'],
 };
