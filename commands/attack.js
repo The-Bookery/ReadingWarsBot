@@ -11,7 +11,7 @@ function timedifference(timestamp1, timestamp2) {
 
   let difference = timestamp2.getTime() - timestamp1.getTime();
 
-  difference = Math.floor(difference / 1000); /// 60);
+  difference = Math.floor(difference / 1000 / 60);
 
   return difference;
 }
