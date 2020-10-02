@@ -66,7 +66,11 @@ module.exports.execute = async (client, message, args) => {
   }
   try {
     pomMembers.sync().then(() => {
-      pomMembers.findAll().then((result) => {
+      pomMembers.findAll({
+        where: {
+          user: message.author.id
+        },
+      }).then((result) => {
         if (result.length >= 1) {
           var timeleft = timedifference(result[0].classchange, Date.now());
           if (timeleft < 24) {
