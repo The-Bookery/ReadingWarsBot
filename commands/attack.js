@@ -224,16 +224,14 @@ module.exports.execute = async (client, message, args) => {
                     { walls: targetresult[0].walls - 1 },
                     { where: { team: wordtarget } }
                   ).then(() => {
-                    pomTeams.update(
+                    pomMembers.update(
                       { coins: result[0].coins - 1 },
                       { where: { user: message.author.id }}
                     ).then(() => {
                       var verb = `damaged`;
                       if (targetresult[0].walls - 1 == 0) verb = "destroyed";
-                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls were ${verb}, and now have a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
-                    })
-                    .then(() => {
                       targetchannel.send(`:crossed_swords: You have been attacked by the **${config.teamnames.teamresult[0].team}**! Your walls blocked the attack and took one damage, and are now at ${targetresult[0].walls - 1}.`);
+                      return message.channel.send(`:crossed_swords: You attack, but the enemy's walls were not breached! The walls were ${verb}, and now have a durability of ${targetresult[0].walls - 1}. You lost one coin in the attempt, and are now at ${result[0].coins - 1} coins.`);
                     })
                     .catch((err) => {
                       console.error("Error! ", err);
