@@ -21,6 +21,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'pingme',
+  module: 'Utility',
   aliases: ['ping'],
   description: 'Pings you whenever an important event happens (like a team bombs or attacks you).',
   usage: ['pingme'],

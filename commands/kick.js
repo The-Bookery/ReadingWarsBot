@@ -149,6 +149,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'kick',
+  module: 'Admin',
   aliases: ['kick'],
   description: 'Kicks a user and removes their coins from the team.',
   usage: ['kick [user ID]'],

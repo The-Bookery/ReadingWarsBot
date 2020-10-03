@@ -236,6 +236,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'place',
+  module: 'Admin',
   aliases: ['place'],
   description: 'Manually put a member on a specific team.',
   usage: ['place <user ID> <team number> <class>'],

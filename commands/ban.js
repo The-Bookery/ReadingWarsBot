@@ -156,6 +156,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'ban',
+  module: 'Admin',
   aliases: ['banuser'],
   description: 'Removes a person from the competition and blocks them from joining again.',
   usage: ['ban [user ID]'],

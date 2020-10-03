@@ -35,6 +35,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'pause',
+  module: 'Admin',
   aliases: ['pausecommand'],
   description: 'Pauses commands so they can\'t be used by anyone but admins.',
   usage: ['pause [command name]'],

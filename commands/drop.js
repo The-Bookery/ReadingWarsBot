@@ -51,6 +51,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'drop',
+  module: 'Admin',
   aliases: ['drop'],
   description: 'Wipes all tables and resets the entire game, removing everyone\'s roles as well. May take a second to finish.',
   usage: ['drop'],

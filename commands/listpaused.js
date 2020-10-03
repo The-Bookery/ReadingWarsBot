@@ -17,6 +17,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'listpaused',
+  module: 'General',
   aliases: ['lp'],
   description: 'Lists all paused commands.',
   usage: ['listpaused'],

@@ -64,6 +64,7 @@ Key: \`[optional argument]\`	\`<required argument>\`	\`this | or this\``)
 };
 module.exports.config = {
   name: 'info',
+  module: 'General',
   aliases: ['info'],
   description: 'Learn basic info about the game.',
   usage: ['info'],

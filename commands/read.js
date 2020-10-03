@@ -76,6 +76,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'read',
+  module: 'Game',
   aliases: ['r'],
   description: 'Adds coins at a rate of one coin for every 15 minutes of reading, and adds a bonus of 50 points per coin for your team. Optional specification for how many 15 reading times you\'ve done (just use `b-read` for one).',
   usage: ['read [times]'],

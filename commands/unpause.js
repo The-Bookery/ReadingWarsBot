@@ -31,6 +31,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'unpause',
+  module: 'Admin',
   aliases: ['unpausecommand'],
   description: 'Unpauses commands so they can be used by everyone.',
   usage: ['unpause [command name]'],

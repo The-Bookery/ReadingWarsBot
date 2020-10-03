@@ -131,6 +131,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'users',
+  module: 'Utility',
   aliases: ['teammembers'],
   description: 'See a list of a team\'s members. Use `all` for the `<team>` to see all members in the game.',
   usage: ['users <team> [page]'],

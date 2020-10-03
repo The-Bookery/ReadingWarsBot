@@ -75,6 +75,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'withdraw',
+  module: 'Game',
   aliases: ['with'],
   description: 'Withdraw coins from your team\'s stash!',
   usage: ['withdraw <coins>'],

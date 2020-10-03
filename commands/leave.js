@@ -172,6 +172,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'leave',
+  module: 'Utility',
   aliases: ['leavewar'],
   description: 'Leave the war and delete all your coins. Use your username (Not your nickname, and without the tag, e.g. "leave zmontgo04") to confirm you want to leave.',
   usage: ['leave <your username>'],

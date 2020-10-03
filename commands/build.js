@@ -100,6 +100,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'build',
+  module: 'Game',
   aliases: ['b'],
   description: 'Builds up to 4 walls for 2 coins. The Stonemason class can build up to 6 walls. The construction time (i.e. cooldown) of the walls after being attacked is two minutes, which leaves you vulnerable to any attacks after being bombed.',
   usage: ['build'],

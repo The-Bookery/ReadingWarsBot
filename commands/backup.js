@@ -89,6 +89,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'backup',
+  module: 'Admin',
   aliases: ['bu'],
   description: 'Backs up both the members and the teams database. Make sure both of these have no issues before running this!',
   usage: ['backup'],

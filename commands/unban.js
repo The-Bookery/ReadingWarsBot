@@ -32,6 +32,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'unban',
+  module: 'Admin',
   aliases: ['unbanuser'],
   description: 'Allows a user to join after being banned.',
   usage: ['unban [user ID]'],

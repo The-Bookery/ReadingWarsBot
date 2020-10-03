@@ -90,6 +90,7 @@ module.exports.execute = async (client, message) => {
 };
 module.exports.config = {
   name: 'teamstats',
+  module: 'Utility',
   aliases: ['team', 'teaminfo'],
   description: 'Learn private info about your team.',
   usage: ['teamstats'],

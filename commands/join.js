@@ -256,6 +256,7 @@ module.exports.execute = async (client, message, args) => {
 };
 module.exports.config = {
   name: 'join',
+  module: 'Utility',
   aliases: ['joinwar'],
   description: 'Join a random team the bot assigns with a chosen class.',
   usage: ['join <knight | thief | stonemason | joker>'],

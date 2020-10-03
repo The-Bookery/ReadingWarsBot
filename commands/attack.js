@@ -269,6 +269,7 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.config = {
   name: 'attack',
+  module: 'Game',
   aliases: ['attack'],
   description: 'This will attempt an attack against the team you target. It can fail on occasion, making you lose the coin, and can be blocked by walls, which will also make you lose the coin. If it succeeds, it will take a random amount of coins from the opposing team\'s top players, and give it to you.',
   usage: ['attack <team number>'],
