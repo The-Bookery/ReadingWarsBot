@@ -8,7 +8,7 @@ function timedifference(timestamp1, timestamp2) {
   timestamp1 = new Date(parseInt(timestamp1));
   timestamp2 = new Date(parseInt(timestamp2));
   let difference = timestamp2.getTime() - timestamp1.getTime();
-  difference = Math.floor(difference / 1000 / 60);
+  difference = Math.floor(difference / 1000);
   return difference;
 }
 
@@ -54,7 +54,7 @@ module.exports.execute = async (client, message) => {
                 team: team,
               },
             }).then((teamresult) => {
-              if (timedifference(teamresult[0].wallcooldown, Date.now()) >= 5) {
+              if (timedifference(teamresult[0].wallcooldown, Date.now()) >= 180) {
                 if (teamresult[0].walls < walls) {
                   pomTeams.update({
                     walls: walls,
@@ -85,7 +85,7 @@ module.exports.execute = async (client, message) => {
                   return message.channel.send('Looks like you can\'t build the walls up any more! You have been saved your coin.');
                 }
               } else {
-                return message.channel.send(`:x: Your team built a wall in the past five minutes! Please wait ${5 - timedifference(teamresult[0].wallcooldown, Date.now())} more minutes!`);
+                return message.channel.send(`:x: Your team built a wall in the past five minutes! Please wait ${180 - timedifference(teamresult[0].wallcooldown, Date.now())} more minutes!`);
               }
             });
           });
@@ -102,6 +102,6 @@ module.exports.config = {
   name: 'build',
   module: 'Game',
   aliases: ['b'],
-  description: 'Builds up to 4 walls for 2 coins. The Stonemason class can build up to 6 walls. The construction time (i.e. cooldown) of the walls after being attacked is two minutes, which leaves you vulnerable to any attacks after being bombed.',
+  description: 'Builds up to 4 walls for 2 coins. The Stonemason class can build up to 6 walls. The construction time (i.e. cooldown) of the walls after being attacked is three minutes, which leaves you vulnerable to any attacks after being bombed.',
   usage: ['build'],
 };
