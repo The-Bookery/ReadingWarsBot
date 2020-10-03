@@ -37,7 +37,7 @@ module.exports.execute = async (client, message) => {
     }).then((result) => {
       var bombcooldown = 60 - timedifference(result[0].bombcooldown, Date.now(), "s");
       if (bombcooldown < 0) bombcooldown = 0;
-      var wallcooldown = 5 - timedifference(result[0].wallcooldown, Date.now(), "m");
+      var wallcooldown = 180 - timedifference(result[0].wallcooldown, Date.now(), "s");
       if (wallcooldown < 0) wallcooldown = 0;
       var threecooldown = 30 - timedifference(result[0].teamthree, Date.now(), "m");
       if (threecooldown < 0) threecooldown = 0;
@@ -67,7 +67,7 @@ module.exports.execute = async (client, message) => {
         inline: true
       }, {
         name: `Build Cooldown`,
-        value: `\`\`\`${wallcooldown} minutes\`\`\``,
+        value: `\`\`\`${wallcooldown} seconds\`\`\``,
         inline: true
       }, {
         name: `Bomb Cooldown`,
