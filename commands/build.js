@@ -85,7 +85,7 @@ module.exports.execute = async (client, message) => {
                   return message.channel.send('Looks like you can\'t build the walls up any more! You have been saved your coin.');
                 }
               } else {
-                return message.channel.send(`:x: Your team built a wall in the past five minutes! Please wait ${180 - timedifference(teamresult[0].wallcooldown, Date.now())} more minutes!`);
+                return message.channel.send(`:x: Your team built a wall in the past three minutes! Please wait ${180 - timedifference(teamresult[0].wallcooldown, Date.now())} more seconds!`);
               }
             });
           });
